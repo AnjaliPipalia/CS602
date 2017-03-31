@@ -7,7 +7,9 @@ import java.sql.Connection;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +43,7 @@ public class MySqlDB implements Database {
 			preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setString(1, foodIntake.getName());
 			preparedStmt.setDate(2, foodIntake.getDate());
-			//preparedStmt.setDate(2, foodIntake.getDate())
+			// preparedStmt.setDate(2, foodIntake.getDate())
 			preparedStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -85,8 +87,25 @@ public class MySqlDB implements Database {
 	 */
 	@Override
 	public List<FoodIntake> read(String foodName, Date from, Date to) {
-		// TODO Auto-generated method stub
 		return null;
+		// try {
+		//
+		// Statement stmt = connection.createStatement();
+		// ResultSet rs;
+		//
+		// rs = stmt.executeQuery("SELECT name FROM FoodIntake WHERE IntakeID =
+		// 5");
+		// while ( rs.next() ) {
+		// String name = rs.getString("Anjali");
+		// System.out.println(name);
+		// }
+		//
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		//
+		// }
+		//
+		// return close();
 	}
 
 	/*
@@ -124,8 +143,22 @@ public class MySqlDB implements Database {
 	 */
 	@Override
 	public boolean delete(FoodIntake foodIntake) {
-		// TODO Auto-generated method stub
-		return false;
+		open();
+		try {
+			String query = "delete from FoodIntake where IntakeID = ?";
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setInt(1, foodIntake.getIntakeID());
+
+			// execute the preparedstatement
+			preparedStmt.execute();
+			preparedStmt.close();
+
+		} catch (SQLException se) {
+			se.printStackTrace();
+			return false;
+		}
+
+		return close();
 	}
 
 	/*
