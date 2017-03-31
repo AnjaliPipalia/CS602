@@ -35,13 +35,13 @@ public class MySqlDB implements Database {
 		// the mysql insert statement
 		String query = " insert into FoodIntake (Name, Date)" + " values (?, ?)";
 
-
 		// create the mysql insert preparedstatement
 		PreparedStatement preparedStmt;
 		try {
 			preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setString(1, foodIntake.getName());
 			preparedStmt.setDate(2, foodIntake.getDate());
+			//preparedStmt.setDate(2, foodIntake.getDate())
 			preparedStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -58,8 +58,23 @@ public class MySqlDB implements Database {
 	 */
 	@Override
 	public boolean create(FoodIntakeType foodIntakeType) {
-		// TODO Auto-generated method stub
-		return false;
+		open();
+		// the mysql insert statement
+		String query = " insert into FoodIntakeType (IntakeType)" + " values (?)";
+
+		// create the mysql insert preparedstatement
+		PreparedStatement preparedStmt;
+		try {
+			// TODO
+			preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setString(1, "LUNCH");
+			preparedStmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		return close();
 	}
 
 	/*
@@ -81,8 +96,25 @@ public class MySqlDB implements Database {
 	 */
 	@Override
 	public boolean update(FoodIntake foodIntake) {
-		// TODO Auto-generated method stub
-		return false;
+		open();
+		try {
+			// create our java preparedstatement using a sql update query
+			PreparedStatement preparedStmts = connection
+					.prepareStatement("UPDATE FoodIntake SET Name = ? WHERE IntakeID = ? ");
+
+			// set the preparedstatement parameters
+			preparedStmts.setString(1, foodIntake.getName());
+			preparedStmts.setInt(2, foodIntake.getIntakeID());
+
+			// call executeUpdate to execute our sql update statement
+			preparedStmts.executeUpdate();
+			preparedStmts.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
+			return false;
+		}
+
+		return close();
 	}
 
 	/*
