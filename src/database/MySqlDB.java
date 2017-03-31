@@ -4,14 +4,15 @@
 package database;
 
 import java.sql.Connection;
-
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
 import java.util.List;
 
 import food.FoodIntake;
@@ -87,25 +88,50 @@ public class MySqlDB implements Database {
 	 */
 	@Override
 	public List<FoodIntake> read(String foodName, Date from, Date to) {
-		return null;
-		// try {
-		//
-		// Statement stmt = connection.createStatement();
-		// ResultSet rs;
-		//
-		// rs = stmt.executeQuery("SELECT name FROM FoodIntake WHERE IntakeID =
-		// 5");
-		// while ( rs.next() ) {
-		// String name = rs.getString("Anjali");
-		// System.out.println(name);
-		// }
-		//
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		//
-		// }
-		//
-		// return close();
+		List<FoodIntake> foodList  = new ArrayList<>();
+		open();
+		try {
+
+			Statement stmt = connection.createStatement();
+			ResultSet rs;
+			String query = getSearchQuery(foodName, from, to);
+
+			rs = stmt.executeQuery(query);
+
+			while (rs.next()) {
+				String name = rs.getString("Name");
+				Date date = rs.getDate("Date");
+				foodList.add(new FoodIntake(name,date));
+				
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+
+		close();
+		return foodList;
+
+	}
+
+	private String getSearchQuery(String foodName, Date from, Date to) {
+		String query = "select * from FoodIntake where ";
+		if (foodName != null && !foodName.trim().equals("")) {
+			query += "Name = '" + foodName + "' ";
+		}
+		if((foodName!=null && !foodName.trim().equals(""))&&(from != null ||to!=null)){
+			query+=" AND ";
+		}
+		if (from != null && to == null) {
+			query += "Date > '" + from + "' ";
+		} else if (from == null && to != null) {
+			query += "Date < '" + to + "' ";
+		} else if (from != null && to != null) {
+			query += "Date Between '" + from + "' and '" + to + "' ";
+		}
+		query += "order by IntakeID desc";
+		return query;
 	}
 
 	/*
