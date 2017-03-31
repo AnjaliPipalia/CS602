@@ -9,7 +9,7 @@ package database;
  */
 public class DatabaseFactory {
 
-	public Database getDatabase(){
+	public static Database getDatabase(){
 		return new MySqlDB();
 	}
 }
