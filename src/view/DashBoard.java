@@ -48,6 +48,13 @@ public class DashBoard {
 	 */
 	protected void createContents() {
 			
+		initializeShell();
+		searchGroupInitializer();
+		searchResultsInitializer();
+		modifyDiet();
+	}
+
+	private void initializeShell() {
 		shell = new Shell(display);
 		//Image image = new Image(display, "C:\\Users\\arp226\\Desktop\\DIET.jpg");
 		Image image = new Image(display, getClass().getClassLoader().getResource("resources/DIET.jpg").getPath());
@@ -55,102 +62,9 @@ public class DashBoard {
 		shell.setImage(image);
 		shell.setSize(1215, 739);
 		shell.setText("Diet Tracker");
-		
-		Group grpSearch = new Group(shell, SWT.NONE);
-		grpSearch.setText("Search Criteria");
-		grpSearch.setBounds(10, 10, 1177, 78);
-		
-		Label lblFoodNameLabel = new Label(grpSearch, SWT.NONE);
-		lblFoodNameLabel.setBounds(10, 31, 82, 29);
-		lblFoodNameLabel.setText("Food Name");
-		
-		Text txtFoodName = new Text(grpSearch, SWT.BORDER);
-		txtFoodName.setBounds(98, 31, 530, 29);
-		
-		Label lblFromeDateLabel = new Label(grpSearch, SWT.CENTER);
-		lblFromeDateLabel.setBounds(new Rectangle(0, 0, 100, 0));
-		lblFromeDateLabel.setAlignment(SWT.CENTER);
-		lblFromeDateLabel.setBounds(634, 31, 70, 29);
-		lblFromeDateLabel.setText("From Date");
-		
-		DateTime FromDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
-		FromDateTime.setBounds(710, 31, 102, 28);
-		
-		Label lblToDateLabel = new Label(grpSearch, SWT.CENTER);
-		lblToDateLabel.setBounds(new Rectangle(0, 0, 100, 0));
-		lblToDateLabel.setAlignment(SWT.LEFT);
-		lblToDateLabel.setBounds(818, 31, 52, 29);
-		lblToDateLabel.setText("To Date");
-		
-		DateTime ToDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
-		ToDateTime.setBounds(876, 31, 102, 28);
-		
-		Button btnSearchButton = new Button(grpSearch, SWT.NONE);
-		btnSearchButton.setBounds(984, 31, 183, 29);
-		btnSearchButton.setText("Search");
-		
-		Group grpSearchResults = new Group(shell, SWT.NONE);
-		grpSearchResults.setText("Search Results");
-		grpSearchResults.setBounds(10, 94, 1177, 298);
-		
-		//CheckboxTableViewer checkboxTableViewer = CheckboxTableViewer.newCheckList(grpSearchResults, SWT.BORDER | SWT.FULL_SELECTION);
-		Table table = new Table(grpSearchResults, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setBounds(10, 25, 1157, 227);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		
-		TableColumn tableColumn = new TableColumn(table, SWT.NONE);
-		tableColumn.setWidth(52);
-		
-		TableColumn tblclmnDescription = new TableColumn(table, SWT.CENTER);
-		tblclmnDescription.setWidth(110);
-		tblclmnDescription.setText("Meal Type");
-		
-		TableColumn tblclmnFoodName = new TableColumn(table, SWT.CENTER);
-		tblclmnFoodName.setWidth(110);
-		tblclmnFoodName.setText("Food Name");
-		
-		TableColumn tblclmnDate = new TableColumn(table, SWT.CENTER);
-		tblclmnDate.setWidth(108);
-		tblclmnDate.setText("Date");
-		
-		TableColumn tblclmnTime = new TableColumn(table, SWT.CENTER);
-		tblclmnTime.setWidth(108);
-		tblclmnTime.setText("Time");
-		
-		TableColumn tblclmnWeightkg = new TableColumn(table, SWT.CENTER);
-		tblclmnWeightkg.setWidth(108);
-		tblclmnWeightkg.setText("Weight (kg)");
-		
-		TableColumn tblclmnCalories = new TableColumn(table, SWT.CENTER);
-		tblclmnCalories.setWidth(108);
-		tblclmnCalories.setText("Calories");
-		
-		TableColumn tblclmnFatg = new TableColumn(table, SWT.CENTER);
-		tblclmnFatg.setWidth(108);
-		tblclmnFatg.setText("Fat (g)");
-		
-		TableColumn tblclmnCarbohydrates = new TableColumn(table, SWT.CENTER);
-		tblclmnCarbohydrates.setWidth(108);
-		tblclmnCarbohydrates.setText("Carbohydrates");
-		
-		TableColumn tblclmnProteinsg = new TableColumn(table, SWT.CENTER);
-		tblclmnProteinsg.setWidth(108);
-		tblclmnProteinsg.setText("Proteins (g)");
-		
-		TableColumn tblclmnComments = new TableColumn(table, SWT.CENTER);
-		tblclmnComments.setWidth(125);
-		tblclmnComments.setText("Comments");
-		
-		Button btnEdit = new Button(grpSearchResults, SWT.NONE);
-		btnEdit.setBounds(981, 258, 90, 30);
-		btnEdit.setText("Edit");
-		
-		Button btnDelete = new Button(grpSearchResults, SWT.NONE);
-		btnDelete.setLocation(1077, 258);
-		btnDelete.setSize(90, 30);
-		btnDelete.setText("Delete");
-		
+	}
+
+	private void modifyDiet() {
 		Group grpDietDetails = new Group(shell, SWT.NONE);
 		grpDietDetails.setText("Diet Details");
 		grpDietDetails.setBounds(10, 398, 1177, 284);
@@ -248,5 +162,88 @@ public class DashBoard {
 		Button btnReset = new Button(grpDietDetails, SWT.NONE);
 		btnReset.setBounds(1077, 244, 90, 30);
 		btnReset.setText("Reset");
+	}
+
+	private void searchResultsInitializer() {
+		Group grpSearchResults = new Group(shell, SWT.NONE);
+		grpSearchResults.setText("Search Results");
+		grpSearchResults.setBounds(10, 94, 1177, 298);
+		
+		Table table = new Table(grpSearchResults, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setBounds(10, 25, 1157, 227);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		
+		setTableHeaders(table);
+		
+		Button btnEdit = new Button(grpSearchResults, SWT.NONE);
+		btnEdit.setBounds(981, 258, 90, 30);
+		btnEdit.setText("Edit");
+		
+		Button btnDelete = new Button(grpSearchResults, SWT.NONE);
+		btnDelete.setLocation(1077, 258);
+		btnDelete.setSize(90, 30);
+		btnDelete.setText("Delete");
+	}
+
+	private void setTableHeaders(Table table) {
+		addColumn(table,"",52);
+		addColumn(table,"Meal Type");
+		addColumn(table,"Food Name");
+		addColumn(table,"Date");
+		addColumn(table,"Time");
+		addColumn(table,"Weight (kg)");
+		addColumn(table,"Calories");
+		addColumn(table,"Fat (g)");
+		addColumn(table,"Carbohydrates");
+		addColumn(table,"Proteins (g)");
+		addColumn(table,"Comments",125);
+	}
+
+	private void addColumn(Table table, String header, int i) {
+		TableColumn column = new TableColumn(table, SWT.CENTER);
+		column.setWidth(i);
+		column.setText(header);
+		
+	}
+
+	private void addColumn(Table table, String header) {
+
+		addColumn(table,header,108);
+	}
+
+	private void searchGroupInitializer() {
+		Group grpSearch = new Group(shell, SWT.NONE);
+		grpSearch.setText("Search Criteria");
+		grpSearch.setBounds(10, 10, 1177, 78);
+		
+		Label lblFoodNameLabel = new Label(grpSearch, SWT.NONE);
+		lblFoodNameLabel.setBounds(10, 31, 82, 29);
+		lblFoodNameLabel.setText("Food Name");
+		
+		Text txtFoodName = new Text(grpSearch, SWT.BORDER);
+		txtFoodName.setBounds(98, 31, 530, 29);
+		
+		Label lblFromDateLabel = new Label(grpSearch, SWT.CENTER);
+		lblFromDateLabel.setBounds(new Rectangle(0, 0, 100, 0));
+		lblFromDateLabel.setAlignment(SWT.CENTER);
+		lblFromDateLabel.setBounds(634, 31, 70, 29);
+		lblFromDateLabel.setText("From Date");
+		
+		DateTime FromDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
+		FromDateTime.setBounds(710, 31, 102, 28);
+		
+		Label lblToDateLabel = new Label(grpSearch, SWT.CENTER);
+		lblToDateLabel.setBounds(new Rectangle(0, 0, 100, 0));
+		lblToDateLabel.setAlignment(SWT.LEFT);
+		lblToDateLabel.setBounds(818, 31, 52, 29);
+		lblToDateLabel.setText("To Date");
+		
+		DateTime ToDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
+		ToDateTime.setBounds(876, 31, 102, 28);
+		
+		Button btnSearchButton = new Button(grpSearch, SWT.NONE);
+		btnSearchButton.setBounds(984, 31, 183, 29);
+		btnSearchButton.setText("Search");
 	}
 }
