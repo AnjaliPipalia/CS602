@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 //import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
@@ -33,6 +34,13 @@ public class DashBoard {
 	private Button btnSave;
 	private Text tFoodName;
 	private DateTime tDate;
+	private Text tCalories;
+	private Text tFat;
+	private Text tCarbohydrates;
+	private Text tProteins;
+	private Text tWeight;
+	private Text tComments;
+	private DateTime tTime;
 
 	// protected Shell shlDietTracker;
 	public DashBoard() {
@@ -113,7 +121,7 @@ public class DashBoard {
 		lblTime.setAlignment(SWT.CENTER);
 		lblTime.setBounds(272, 69, 33, 20);
 
-		DateTime tTime = new DateTime(grpDietDetails, SWT.TIME);
+		tTime = new DateTime(grpDietDetails, SWT.TIME);
 		tTime.setBounds(311, 61, 107, 28);
 
 		Label lblWeightkg = new Label(grpDietDetails, SWT.NONE);
@@ -121,7 +129,7 @@ public class DashBoard {
 		lblWeightkg.setText("Weight (kg)");
 		lblWeightkg.setBounds(15, 96, 77, 20);
 
-		Text tWeight = new Text(grpDietDetails, SWT.BORDER);
+		tWeight = new Text(grpDietDetails, SWT.BORDER);
 		tWeight.setBounds(98, 93, 107, 26);
 
 		Label lblCalories = new Label(grpDietDetails, SWT.CENTER);
@@ -129,7 +137,7 @@ public class DashBoard {
 		lblCalories.setText("Calories");
 		lblCalories.setBounds(252, 96, 53, 20);
 
-		Text tCalories = new Text(grpDietDetails, SWT.BORDER);
+		tCalories = new Text(grpDietDetails, SWT.BORDER);
 		tCalories.setBounds(311, 93, 107, 26);
 
 		Label lblFatg = new Label(grpDietDetails, SWT.CENTER);
@@ -137,7 +145,7 @@ public class DashBoard {
 		lblFatg.setText("Fat (g)");
 		lblFatg.setBounds(502, 96, 42, 20);
 
-		Text tFat = new Text(grpDietDetails, SWT.BORDER);
+		tFat = new Text(grpDietDetails, SWT.BORDER);
 		tFat.setBounds(550, 93, 107, 26);
 
 		Label lblCarbohydrates = new Label(grpDietDetails, SWT.CENTER);
@@ -145,7 +153,7 @@ public class DashBoard {
 		lblCarbohydrates.setText("Carbohydrates");
 		lblCarbohydrates.setBounds(724, 96, 100, 29);
 
-		Text tCarbohydrates = new Text(grpDietDetails, SWT.BORDER);
+		tCarbohydrates = new Text(grpDietDetails, SWT.BORDER);
 		tCarbohydrates.setBounds(830, 93, 107, 26);
 
 		Label lblProteinsg = new Label(grpDietDetails, SWT.CENTER);
@@ -153,7 +161,7 @@ public class DashBoard {
 		lblProteinsg.setText("Proteins (g)");
 		lblProteinsg.setBounds(978, 96, 76, 20);
 
-		Control tProteins = new Text(grpDietDetails, SWT.BORDER);
+		tProteins = new Text(grpDietDetails, SWT.BORDER);
 		tProteins.setBounds(1060, 93, 107, 26);
 
 		Label lComments = new Label(grpDietDetails, SWT.CENTER);
@@ -161,7 +169,7 @@ public class DashBoard {
 		lComments.setText("Comments");
 		lComments.setBounds(21, 218, 71, 20);
 
-		Text tComments = new Text(grpDietDetails, SWT.BORDER | SWT.MULTI);
+		tComments = new Text(grpDietDetails, SWT.BORDER | SWT.MULTI);
 		tComments.setBounds(98, 131, 1069, 107);
 
 		btnSave = new Button(grpDietDetails, SWT.NONE);
@@ -276,4 +284,64 @@ public class DashBoard {
 		instance.set(Calendar.YEAR, tDate.getYear());
 		return new Date(instance.getTime().getTime());
 	}
+	
+
+	public void addCaloriesValidation(VerifyListener verifyListener) {
+		tCalories.addVerifyListener(verifyListener);
+
+	}
+
+	public void addFatValidation(VerifyListener verifyListener) {
+		tFat.addVerifyListener(verifyListener);
+	}
+
+	public void addCarbsValidation(VerifyListener verifyListener) {
+		tCarbohydrates.addVerifyListener(verifyListener);
+	}
+
+	public void addWeightValidation(VerifyListener verifyListener) {
+		tWeight.addVerifyListener(verifyListener);
+	}
+
+	public void addProteinsValidation(VerifyListener verifyListener) {
+		tProteins.addVerifyListener(verifyListener);
+	}
+
+	public void addFoodNameValidation(VerifyListener ensureCharsOnly) {
+		tFoodName.addVerifyListener(ensureCharsOnly);
+	}
+
+	public int getNewCalories() {
+		return Integer.parseInt(tCalories.getText());
+	}
+
+	public int getNewFat() {
+		 return Integer.parseInt(tFat.getText());
+	}
+
+	public int getNewCarbohydrates() {
+		return Integer.parseInt(tCarbohydrates.getText());
+	}
+
+	public int getNewWeight() {
+		return Integer.parseInt(tWeight.getText());
+	}
+
+	public int getNewProteins() {
+		return Integer.parseInt(tProteins.getText());
+	}
+
+	public String getNewComments() {
+		return tComments.getText();
+	}
+
+	public Date getNewTime() {
+		Calendar instance = Calendar.getInstance();
+		instance.set(Calendar.HOUR_OF_DAY, tTime.getHours());
+		instance.set(Calendar.MINUTE, tTime.getMinutes());
+		instance.set(Calendar.SECOND, tTime.getSeconds());
+		return new Date(instance.getTime().getTime());
+	
+	}
+
 }

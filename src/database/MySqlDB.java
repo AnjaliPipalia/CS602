@@ -36,7 +36,7 @@ public class MySqlDB implements Database {
 	public boolean create(FoodIntake foodIntake) {
 		open();
 		// the mysql insert statement
-		String query = " insert into FoodIntake (Name, Date)" + " values (?, ?)";
+		String query = " insert into FoodIntake (Name, Date,Time,Weight,Calories,Fat,Carbohydrates,Proteins,Comments)" + " values (?, ?,?,?,?,?,?,?,?)";
 
 		// create the mysql insert preparedstatement
 		PreparedStatement preparedStmt;
@@ -44,7 +44,13 @@ public class MySqlDB implements Database {
 			preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setString(1, foodIntake.getName());
 			preparedStmt.setDate(2, foodIntake.getDate());
-			// preparedStmt.setDate(2, foodIntake.getDate())
+			preparedStmt.setDate(3, foodIntake.getTime());
+			preparedStmt.setInt(4, foodIntake.getWeight());
+			preparedStmt.setInt(5, foodIntake.getCalories());
+			preparedStmt.setInt(6, foodIntake.getFat());
+			preparedStmt.setInt(7, foodIntake.getCarbohydrates());
+			preparedStmt.setInt(8, foodIntake.getProteins());
+			preparedStmt.setString(9, foodIntake.getComments());
 			preparedStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
