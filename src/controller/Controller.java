@@ -3,8 +3,11 @@
  */
 package controller;
 
+import java.awt.Window;
 import java.sql.Date;
 import java.util.Calendar;
+
+import javax.swing.JOptionPane;
 
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
@@ -39,7 +42,9 @@ public class Controller {
 		addProteinsValidation();
 		addWeightValidation();
 	}
+	////////////////////////////////////////////////////////////////////////////////////////
 
+	///////////////////////////////////////////////////////////////////////////////////////////
 	private void addFoodNameValidation() {
 		window.addFoodNameValidation(ensureCharsOnly());
 	}
@@ -107,6 +112,7 @@ public class Controller {
 				
 				FoodIntake foodIntake = new FoodIntake();
 				try {
+					
 					foodIntake.setName(fdName);
 					foodIntake.setDate(date);
 					foodIntake.setCalories(calories);
@@ -118,6 +124,7 @@ public class Controller {
 					foodIntake.setTime(time);
 					
 					database.create(foodIntake);
+					JOptionPane.showMessageDialog(null, "Saved Successfully!");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
