@@ -6,6 +6,8 @@ package view;
 import java.sql.Date;
 import java.util.Calendar;
 
+import javax.swing.JFrame;
+
 //import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyListener;
@@ -23,6 +25,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+
+import exception.MandatoryFieldMissingException;
 
 /**
  * @author arp226
@@ -84,6 +88,8 @@ public class DashBoard {
 		shell.setSize(1215, 739);
 		shell.setText("Diet Tracker");
 	}
+
+	
 
 	private void modifyDiet() {
 		Group grpDietDetails = new Group(shell, SWT.NONE);
@@ -272,8 +278,10 @@ public class DashBoard {
 		btnSave.addListener(SWT.Selection, listener);
 	}
 
-	public String getNewFoodName() {
-
+	public String getNewFoodName() throws MandatoryFieldMissingException {
+		if(tFoodName.getText().trim().equals("")){
+			throw new MandatoryFieldMissingException("Please enter food name");
+		}
 		return tFoodName.getText();
 	}
 
@@ -312,22 +320,37 @@ public class DashBoard {
 	}
 
 	public int getNewCalories() {
+		if(tCalories.getText().equals("")){
+			return 0;
+		}
 		return Integer.parseInt(tCalories.getText());
 	}
 
 	public int getNewFat() {
+		if(tFat.getText().equals("")){
+			return 0;
+		}
 		 return Integer.parseInt(tFat.getText());
 	}
 
 	public int getNewCarbohydrates() {
+		if(tCarbohydrates.getText().equals("")){
+			return 0;
+		}
 		return Integer.parseInt(tCarbohydrates.getText());
 	}
 
 	public int getNewWeight() {
+		if(tWeight.getText().equals("")){
+			return 0;
+		}
 		return Integer.parseInt(tWeight.getText());
 	}
 
 	public int getNewProteins() {
+		if(tProteins.getText().equals("")){
+			return 0;
+		}
 		return Integer.parseInt(tProteins.getText());
 	}
 

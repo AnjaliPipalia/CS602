@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import database.Database;
+import exception.MandatoryFieldMissingException;
 import food.FoodIntake;
 import view.DashBoard;
 
@@ -42,9 +43,7 @@ public class Controller {
 		addProteinsValidation();
 		addWeightValidation();
 	}
-	////////////////////////////////////////////////////////////////////////////////////////
 
-	///////////////////////////////////////////////////////////////////////////////////////////
 	private void addFoodNameValidation() {
 		window.addFoodNameValidation(ensureCharsOnly());
 	}
@@ -53,8 +52,7 @@ public class Controller {
 		return new VerifyListener() {
 
 			public void verifyText(VerifyEvent event) {
-				if (event.character != '\u0008' && event.character != '\u007F'
-						&& !event.text.matches("[a-zA-Z\\s_,]")) {
+				if (event.character != '\u0008' && event.character != '\u007F' && !event.text.matches("[\\D]")) {
 					event.doit = false;
 
 				}
@@ -100,19 +98,19 @@ public class Controller {
 
 			@Override
 			public void handleEvent(Event event) {
-				String fdName = window.getNewFoodName();
-				Date date = window.getNewFoodDate();
-				Date time = window.getNewTime();
-				int calories = window.getNewCalories();
-				int fat = window.getNewFat();
-				int carbohydrates = window.getNewCarbohydrates();
-				int weight = window.getNewWeight();
-				int proteins = window.getNewProteins();
-				String comments = window.getNewComments();
-				
-				FoodIntake foodIntake = new FoodIntake();
 				try {
-					
+					String fdName = window.getNewFoodName();
+					Date date = window.getNewFoodDate();
+					Date time = window.getNewTime();
+					int calories = window.getNewCalories();
+					int fat = window.getNewFat();
+					int carbohydrates = window.getNewCarbohydrates();
+					int weight = window.getNewWeight();
+					int proteins = window.getNewProteins();
+					String comments = window.getNewComments();
+
+					FoodIntake foodIntake = new FoodIntake();
+
 					foodIntake.setName(fdName);
 					foodIntake.setDate(date);
 					foodIntake.setCalories(calories);
@@ -122,10 +120,14 @@ public class Controller {
 					foodIntake.setProteins(proteins);
 					foodIntake.setComments(comments);
 					foodIntake.setTime(time);
-					
+
 					database.create(foodIntake);
 					JOptionPane.showMessageDialog(null, "Saved Successfully!");
+				} catch (MandatoryFieldMissingException me) {
+					JOptionPane.showMessageDialog(null, me.getMessage());
+					me.printStackTrace();
 				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Failed to save!");
 					e.printStackTrace();
 				}
 

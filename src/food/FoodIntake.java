@@ -64,13 +64,8 @@ public class FoodIntake {
 		return this.name;
 	}
 
-	public void setName(String name) throws Exception {
-		if (name == null || name.trim().equals("")) {
-			throw new Exception("Please enter food name");
-		}
-		// if (!(name.matches("[a-zA-Z\\s]"))) {
-		// throw new Exception("Please enter characters only");
-		// }
+	public void setName(String name)  {
+		
 		this.name = name;
 	}
 
@@ -100,7 +95,7 @@ public class FoodIntake {
 	 *            the weight to set
 	 * @throws Exception
 	 */
-	public void setWeight(int weight) throws Exception {
+	public void setWeight(int weight) {
 		this.weight = weight;
 
 	}
@@ -117,7 +112,8 @@ public class FoodIntake {
 	 *            the calories to set
 	 * @throws Exception
 	 */
-	public void setCalories(int calories) throws Exception {
+	public void setCalories(int calories){
+		
 		this.calories = calories;
 	}
 
@@ -133,7 +129,7 @@ public class FoodIntake {
 	 *            the fat to set
 	 * @throws Exception
 	 */
-	public void setFat(int fat) throws Exception {
+	public void setFat(int fat) {
 		this.fat = fat;
 	}
 
@@ -149,7 +145,7 @@ public class FoodIntake {
 	 *            the carbohydrates to set
 	 * @throws Exception
 	 */
-	public void setCarbohydrates(int carbohydrates) throws Exception {
+	public void setCarbohydrates(int carbohydrates){
 		this.carbohydrates = carbohydrates;
 	}
 
@@ -165,7 +161,7 @@ public class FoodIntake {
 	 *            the proteins to set
 	 * @throws Exception
 	 */
-	public void setProteins(int proteins) throws Exception {
+	public void setProteins(int proteins) {
 		this.proteins = proteins;
 	}
 
@@ -181,7 +177,7 @@ public class FoodIntake {
 	 *            the comments to set
 	 * @throws Exception
 	 */
-	public void setComments(String comments) throws Exception {
+	public void setComments(String comments){
 		this.comments = comments;
 	}
 
