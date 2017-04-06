@@ -76,12 +76,11 @@ public class NutrientsTrackerApp {
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				// destroy the lock when the JVM is closing
 				public void run() {
-
 					closeLock();
 					deleteFile();
 				}
 			});
-			raf.close();
+
 			return false;
 		} catch (Exception e) {
 
