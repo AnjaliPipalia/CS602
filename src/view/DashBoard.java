@@ -89,8 +89,6 @@ public class DashBoard {
 		shell.setText("Diet Tracker");
 	}
 
-	
-
 	private void modifyDiet() {
 		Group grpDietDetails = new Group(shell, SWT.NONE);
 		grpDietDetails.setText("Diet Details");
@@ -279,10 +277,14 @@ public class DashBoard {
 	}
 
 	public String getNewFoodName() throws MandatoryFieldMissingException {
-		if(tFoodName.getText().trim().equals("")){
+		if (tFoodName.getText().trim().equals("")) {
 			throw new MandatoryFieldMissingException("Please enter food name");
 		}
 		return tFoodName.getText();
+	}
+
+	public void setNewFoodName(String string) {
+		tFoodName.setText(string);
 	}
 
 	public Date getNewFoodDate() {
@@ -292,7 +294,6 @@ public class DashBoard {
 		instance.set(Calendar.YEAR, tDate.getYear());
 		return new Date(instance.getTime().getTime());
 	}
-	
 
 	public void addCaloriesValidation(VerifyListener verifyListener) {
 		tCalories.addVerifyListener(verifyListener);
@@ -320,42 +321,69 @@ public class DashBoard {
 	}
 
 	public int getNewCalories() {
-		if(tCalories.getText().equals("")){
+		if (tCalories.getText().equals("")) {
 			return 0;
 		}
 		return Integer.parseInt(tCalories.getText());
 	}
 
+	public void setNewCalories(String i) {
+		tCalories.setText(i);
+	}
+
 	public int getNewFat() {
-		if(tFat.getText().equals("")){
+		if (tFat.getText().equals("")) {
 			return 0;
 		}
-		 return Integer.parseInt(tFat.getText());
+		return Integer.parseInt(tFat.getText());
+	}
+
+	public void setNewFat(String string) {
+		tFat.setText(string);
+
 	}
 
 	public int getNewCarbohydrates() {
-		if(tCarbohydrates.getText().equals("")){
+		if (tCarbohydrates.getText().equals("")) {
 			return 0;
 		}
 		return Integer.parseInt(tCarbohydrates.getText());
 	}
 
+	public void setNewCarbohydrates(String str) {
+		tCarbohydrates.setText(str);
+	}
+
 	public int getNewWeight() {
-		if(tWeight.getText().equals("")){
+		if (tWeight.getText().equals("")) {
 			return 0;
 		}
 		return Integer.parseInt(tWeight.getText());
 	}
 
+	public void setNewWeight(String string) {
+		tWeight.setText(string);
+
+	}
+
 	public int getNewProteins() {
-		if(tProteins.getText().equals("")){
+		if (tProteins.getText().equals("")) {
 			return 0;
 		}
 		return Integer.parseInt(tProteins.getText());
 	}
 
+	public void setNewProteins(String string) {
+		tProteins.setText(string);
+
+	}
+
 	public String getNewComments() {
 		return tComments.getText();
+	}
+
+	public void setNewComments(String string) {
+		tComments.setText(string);
 	}
 
 	public Date getNewTime() {
@@ -364,7 +392,7 @@ public class DashBoard {
 		instance.set(Calendar.MINUTE, tTime.getMinutes());
 		instance.set(Calendar.SECOND, tTime.getSeconds());
 		return new Date(instance.getTime().getTime());
-	
+
 	}
 
 }

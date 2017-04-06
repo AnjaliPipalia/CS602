@@ -122,8 +122,23 @@ public class Controller {
 					foodIntake.setTime(time);
 
 					database.create(foodIntake);
-					JOptionPane.showMessageDialog(null, "Saved Successfully!");
-				} catch (MandatoryFieldMissingException me) {
+					// JOptionPane.showMessageDialog(null, "Saved
+					// Successfully!");
+					if (showMessageDialog()) {
+						window.setNewFoodName(" ");
+						// window.setNewDate();
+						window.setNewCalories("0");
+						window.setNewFat("0");
+						window.setNewCarbohydrates("0");
+						window.setNewWeight("0");
+						window.setNewProteins("0");
+						window.setNewComments("");
+						// window.setNewTime("");
+
+					}
+				}
+
+				catch (MandatoryFieldMissingException me) {
 					JOptionPane.showMessageDialog(null, me.getMessage());
 					me.printStackTrace();
 				} catch (Exception e) {
@@ -134,6 +149,11 @@ public class Controller {
 			}
 		});
 
+	}
+
+	protected boolean showMessageDialog() {
+		JOptionPane.showMessageDialog(null, "Saved Successfully!");
+		return true;
 	}
 
 }
