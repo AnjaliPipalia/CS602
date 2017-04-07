@@ -4,6 +4,7 @@
 package food;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.Calendar;
 
 import main.Utils;
@@ -15,7 +16,8 @@ import main.Utils;
 public class FoodIntake {
 	int intakeID, weight, calories, fat, carbohydrates, proteins;
 	String name, comments;
-	Date date, time;
+	Date date;
+	Time time;
 	FoodIntakeType intakeType;
 
 	public FoodIntake(String name, Date date) {
@@ -28,7 +30,8 @@ public class FoodIntake {
 		this.proteins = 0;
 		this.comments = "";
 		this.date = date;
-		this.time = Utils.getTodaysTime();;
+		this.time = Utils.getTodaysTime();
+		;
 		this.intakeType = FoodIntakeType.LUNCH;
 	}
 
@@ -64,18 +67,16 @@ public class FoodIntake {
 		return this.name;
 	}
 
-	public void setName(String name)  {
-		
+	public void setName(String name) {
+
 		this.name = name;
 	}
 
 	/*
 	 * Date - Table FoodIntake
 	 */
-	public void setDate(Date date) throws Exception {
-		if (Utils.getTodaysDate().compareTo(date) < 0) {
-			throw new Exception("Incorrect date");
-		}
+	public void setDate(Date date) {
+
 		this.date = date;
 	}
 
@@ -112,8 +113,8 @@ public class FoodIntake {
 	 *            the calories to set
 	 * @throws Exception
 	 */
-	public void setCalories(int calories){
-		
+	public void setCalories(int calories) {
+
 		this.calories = calories;
 	}
 
@@ -145,7 +146,7 @@ public class FoodIntake {
 	 *            the carbohydrates to set
 	 * @throws Exception
 	 */
-	public void setCarbohydrates(int carbohydrates){
+	public void setCarbohydrates(int carbohydrates) {
 		this.carbohydrates = carbohydrates;
 	}
 
@@ -177,27 +178,27 @@ public class FoodIntake {
 	 *            the comments to set
 	 * @throws Exception
 	 */
-	public void setComments(String comments){
+	public void setComments(String comments) {
 		this.comments = comments;
 	}
 
 	/**
 	 * @return the time
 	 */
-	public Date getTime() {
+	public Time getTime() {
 		return time;
 	}
 
-	/**TODO - Verify SetTIME
-	 * @param time
+	/**
+	 * TODO - Verify SetTIME
+	 * 
+	 * @param time2
 	 *            the time to set
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public void setTime(Date time) throws Exception {
-		if (Utils.getTodaysTime().compareTo(time) < 0) {
-			throw new Exception("Incorrect time");
-		}
-		this.time = time;
+	public void setTime(Time time2) {
+
+		this.time = time2;
 	}
 
 }

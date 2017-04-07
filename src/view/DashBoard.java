@@ -4,6 +4,7 @@
 package view;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.Calendar;
 
 import javax.swing.JFrame;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import exception.MandatoryFieldMissingException;
+import main.Utils;
 
 /**
  * @author arp226
@@ -287,12 +289,22 @@ public class DashBoard {
 		tFoodName.setText(string);
 	}
 
-	public Date getNewFoodDate() {
+	public Date getNewFoodDate() throws MandatoryFieldMissingException {
 		Calendar instance = Calendar.getInstance();
 		instance.set(Calendar.DAY_OF_MONTH, tDate.getDay());
 		instance.set(Calendar.MONTH, tDate.getMonth());
 		instance.set(Calendar.YEAR, tDate.getYear());
-		return new Date(instance.getTime().getTime());
+		Date d = new Date(instance.getTime().getTime());
+		if (Utils.getTodaysDate().compareTo(d) < 0) {
+			throw new MandatoryFieldMissingException("Invalid date");
+		}
+		return d;
+	}
+
+	public void setToCurrDate() {
+		Calendar instance = Calendar.getInstance();
+		tDate.setDate(instance.get(Calendar.YEAR), instance.get(Calendar.MONTH), instance.get(Calendar.DAY_OF_MONTH));
+
 	}
 
 	public void addCaloriesValidation(VerifyListener verifyListener) {
@@ -386,12 +398,22 @@ public class DashBoard {
 		tComments.setText(string);
 	}
 
-	public Date getNewTime() {
+	public Time getNewTime() throws MandatoryFieldMissingException {
 		Calendar instance = Calendar.getInstance();
 		instance.set(Calendar.HOUR_OF_DAY, tTime.getHours());
 		instance.set(Calendar.MINUTE, tTime.getMinutes());
 		instance.set(Calendar.SECOND, tTime.getSeconds());
-		return new Date(instance.getTime().getTime());
+		Time t = new Time(instance.getTime().getTime());
+
+		if (Utils.getTodaysTime().compareTo(t) < 0) {
+			throw new MandatoryFieldMissingException("Invalid time");
+		}
+		return t;
+	}
+
+	public void setToCurrTime() {
+		Calendar instance = Calendar.getInstance();
+		tTime.setTime(instance.get(Calendar.HOUR_OF_DAY), instance.get(Calendar.MINUTE), instance.get(Calendar.SECOND));
 
 	}
 

@@ -5,6 +5,7 @@ package controller;
 
 import java.awt.Window;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.Calendar;
 
 import javax.swing.JOptionPane;
@@ -101,7 +102,7 @@ public class Controller {
 				try {
 					String fdName = window.getNewFoodName();
 					Date date = window.getNewFoodDate();
-					Date time = window.getNewTime();
+					Time time = window.getNewTime();
 					int calories = window.getNewCalories();
 					int fat = window.getNewFat();
 					int carbohydrates = window.getNewCarbohydrates();
@@ -122,18 +123,16 @@ public class Controller {
 					foodIntake.setTime(time);
 
 					database.create(foodIntake);
-					// JOptionPane.showMessageDialog(null, "Saved
-					// Successfully!");
 					if (showMessageDialog()) {
 						window.setNewFoodName(" ");
-						// window.setNewDate();
+						window.setToCurrDate();
 						window.setNewCalories("0");
 						window.setNewFat("0");
 						window.setNewCarbohydrates("0");
 						window.setNewWeight("0");
 						window.setNewProteins("0");
 						window.setNewComments("");
-						// window.setNewTime("");
+					    window.setToCurrTime();
 
 					}
 				}
