@@ -56,6 +56,8 @@ public class DashBoard {
 	private DateTime FromDateTime;
 	private DateTime ToDateTime;
 	private Table table;
+	private Button btnEdit;
+	
 
 	// protected Shell shlDietTracker;
 	public DashBoard() {
@@ -84,9 +86,10 @@ public class DashBoard {
 	protected void createContents() {
 
 		initializeShell();
+		modifyDiet();
 		searchGroupInitializer();
 		searchResultsInitializer();
-		modifyDiet();
+		
 	}
 
 	private void initializeShell() {
@@ -210,13 +213,10 @@ public class DashBoard {
 		table.setBounds(10, 25, 1157, 227);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-//		table.addListener(SWT.SetData, new Listener() {
-//			public void handleEvent(Event event) {
-//			TableItem item = (TableItem) event.item;
 
 		setTableHeaders(table);
 
-		Button btnEdit = new Button(grpSearchResults, SWT.NONE);
+		btnEdit = new Button(grpSearchResults, SWT.NONE);
 		btnEdit.setBounds(981, 258, 90, 30);
 		btnEdit.setText("Edit");
 
@@ -486,6 +486,34 @@ public class DashBoard {
 		item.setText(8,proteins+"");
 		item.setText(9,comment);
 	
+		
+	}
+
+	public void defineEditAction(Listener listener) {
+		btnEdit.addListener(SWT.Selection,listener);
+		
+	}
+
+	public int getSelectedRow() {
+		return table.getSelectionIndex();
+		
+	}
+
+	public void setNewDate(Date date) {
+		
+		tDate.setDate(date.getYear(), date.getMonth(), date.getDay());
+
+		
+	}
+
+	public void setNewTime(Time time) {
+		tTime.setTime(time.getHours(),time.getMinutes(), time.getSeconds());
+
+		
+	}
+
+	public void setNewMealType(FoodIntakeType intakeType) {
+		combo.setText(intakeType.mealName());
 		
 	}
 

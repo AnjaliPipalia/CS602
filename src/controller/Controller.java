@@ -27,10 +27,12 @@ import view.DashBoard;
  * @author arp226
  *
  */
+
 public class Controller {
 
 	private Database database;
 	private DashBoard window;
+	List<FoodIntake> foodList = new ArrayList<>();
 
 	public Controller(Database database, DashBoard window) {
 		this.database = database;
@@ -39,6 +41,9 @@ public class Controller {
 	}
 
 	public void initialize() {
+		defineSearchAction();
+		defineEditAction();
+
 		defineSaveAction();
 		addFoodNameValidation();
 		addCaloriesValidation();
@@ -47,22 +52,39 @@ public class Controller {
 		addProteinsValidation();
 		addWeightValidation();
 
-		defineSearchAction();
-		// defineSearchResults();
-
 	}
 
-	// private void defineSearchResults() {
-	// window.de
-	//
-	// }
+	private void defineEditAction() {
+		window.defineEditAction(new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				int index = window.getSelectedRow();
+				FoodIntake foodIntake = foodList.get(index);
+				window.setNewFoodName(foodIntake.getName());
+				System.out.println(foodIntake.getName());
+
+				window.setNewDate(foodIntake.getDate());
+				window.setNewCalories(foodIntake.getCalories() + "");
+
+				window.setNewFat(foodIntake.getFat() + "");
+				System.out.println(foodIntake.getFat());
+				window.setNewCarbohydrates(foodIntake.getCarbohydrates() + "");
+				window.setNewWeight(foodIntake.getWeight() + "");
+				window.setNewProteins(foodIntake.getProteins() + "");
+				window.setNewComments(foodIntake.getComments());
+				window.setNewTime(foodIntake.getTime());
+				window.setNewMealType(foodIntake.getIntakeType());
+			}
+		});
+	}
 
 	private void defineSearchAction() {
 		window.defineSearchAction(new Listener() {
 
 			@Override
 			public void handleEvent(Event event) {
-				List<FoodIntake> foodList = new ArrayList<>();
+
 				try {
 
 					String fdName = window.getSearchFoodName();
@@ -83,10 +105,10 @@ public class Controller {
 						int carbs = foodList.get(i).getCarbohydrates();
 						int proteins = foodList.get(i).getProteins();
 						String comment = foodList.get(i).getComments();
-						window.createSearchResultRow(name,typeID,date,time,weight,cal,fat,carbs,proteins,comment);
+						window.createSearchResultRow(name, typeID, date, time, weight, cal, fat, carbs, proteins,
+								comment);
 					}
 
-					// System.out.println(foodList);
 				} catch (MandatoryFieldMissingException e) {
 					e.printStackTrace();
 				}
@@ -103,12 +125,18 @@ public class Controller {
 	private VerifyListener ensureCharsOnly() {
 		return new VerifyListener() {
 
-			public void verifyText(VerifyEvent event) {
-				if (event.character != '\u0008' && event.character != '\u007F' && !event.text.matches("[\\D]")) {
-					event.doit = false;
-
+			public void verifyText(VerifyEvent e) {
+				String text = e.text;
+				for (int i = 0; i < text.length(); i++) {
+					char ch = text.charAt(i);
+					if (!Character.isLetter(ch) && (ch != '\u0008' || ch != '\u007F')&& ch != ' '&& ch!=',' && ch!='-') {
+						e.doit = false;
+						return;
+					}
 				}
+				
 			}
+
 		};
 	}
 
