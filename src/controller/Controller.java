@@ -16,6 +16,7 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Table;
 
 import database.Database;
 import exception.MandatoryFieldMissingException;
@@ -52,6 +53,26 @@ public class Controller {
 		addProteinsValidation();
 		addWeightValidation();
 
+		defineDeleteAction();
+
+	}
+
+	private void defineDeleteAction() {
+		window.defineDeleteAction(new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				int index = window.getSelectedRow();
+				FoodIntake foodIntake = foodList.get(index);
+				if (database.delete(foodIntake)) {
+					JOptionPane.showMessageDialog(null, "Deleted Successfully");
+
+				} else
+					JOptionPane.showMessageDialog(null, "Failed to delete!");
+
+			}
+
+		});
 	}
 
 	private void defineEditAction() {
@@ -62,13 +83,9 @@ public class Controller {
 				int index = window.getSelectedRow();
 				FoodIntake foodIntake = foodList.get(index);
 				window.setNewFoodName(foodIntake.getName());
-				System.out.println(foodIntake.getName());
-
 				window.setNewDate(foodIntake.getDate());
 				window.setNewCalories(foodIntake.getCalories() + "");
-
 				window.setNewFat(foodIntake.getFat() + "");
-				System.out.println(foodIntake.getFat());
 				window.setNewCarbohydrates(foodIntake.getCarbohydrates() + "");
 				window.setNewWeight(foodIntake.getWeight() + "");
 				window.setNewProteins(foodIntake.getProteins() + "");
@@ -88,11 +105,9 @@ public class Controller {
 				try {
 
 					String fdName = window.getSearchFoodName();
-					// System.out.println(fdName);
 					Date fromDate = window.getSearchFromDate();
-					// System.out.println(fromDate);
 					Date toDate = window.getSearchToDate();
-					// System.out.println(toDate);
+					window.clearTable();
 					foodList = database.read(fdName, fromDate, toDate);
 					for (int i = 0; i < foodList.size(); i++) {
 						String name = foodList.get(i).getName();
@@ -129,12 +144,13 @@ public class Controller {
 				String text = e.text;
 				for (int i = 0; i < text.length(); i++) {
 					char ch = text.charAt(i);
-					if (!Character.isLetter(ch) && (ch != '\u0008' || ch != '\u007F')&& ch != ' '&& ch!=',' && ch!='-') {
+					if (!Character.isLetter(ch) && (ch != '\u0008' || ch != '\u007F') && ch != ' ' && ch != ','
+							&& ch != '-') {
 						e.doit = false;
 						return;
 					}
 				}
-				
+
 			}
 
 		};

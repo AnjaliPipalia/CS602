@@ -57,7 +57,7 @@ public class DashBoard {
 	private DateTime ToDateTime;
 	private Table table;
 	private Button btnEdit;
-	
+	private Button btnDelete;
 
 	// protected Shell shlDietTracker;
 	public DashBoard() {
@@ -89,7 +89,7 @@ public class DashBoard {
 		modifyDiet();
 		searchGroupInitializer();
 		searchResultsInitializer();
-		
+
 	}
 
 	private void initializeShell() {
@@ -122,7 +122,7 @@ public class DashBoard {
 		lblMealType.setText("Meal Type");
 
 		combo = new Combo(grpDietDetails, SWT.NONE);
-		combo.setItems(new String[] {"Breakfast", "Lunch", "Dinner", "Snacks", "PartyMeal", "Meal", "Others"});
+		combo.setItems(new String[] { "Breakfast", "Lunch", "Dinner", "Snacks", "PartyMeal", "Meal", "Others" });
 		combo.setBounds(932, 32, 235, 28);
 
 		Label lblDate = new Label(grpDietDetails, SWT.CENTER);
@@ -220,14 +220,14 @@ public class DashBoard {
 		btnEdit.setBounds(981, 258, 90, 30);
 		btnEdit.setText("Edit");
 
-		Button btnDelete = new Button(grpSearchResults, SWT.NONE);
+		btnDelete = new Button(grpSearchResults, SWT.NONE);
 		btnDelete.setLocation(1077, 258);
 		btnDelete.setSize(90, 30);
 		btnDelete.setText("Delete");
 	}
 
 	private void setTableHeaders(Table table) {
-		
+
 		addColumn(table, "Meal Type");
 		addColumn(table, "Food Name");
 		addColumn(table, "Date");
@@ -270,7 +270,7 @@ public class DashBoard {
 		lblFromDateLabel.setBounds(634, 31, 70, 29);
 		lblFromDateLabel.setText("From Date");
 
-		 FromDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
+		FromDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
 		FromDateTime.setBounds(710, 31, 102, 28);
 
 		Label lblToDateLabel = new Label(grpSearch, SWT.CENTER);
@@ -431,11 +431,11 @@ public class DashBoard {
 	}
 
 	public String getFoodIntakeType() throws MandatoryFieldMissingException {
-		if(combo.getText()==null||combo.getText().equals("")){
+		if (combo.getText() == null || combo.getText().equals("")) {
 			throw new MandatoryFieldMissingException("Please enter Meal Type");
 		}
 		return combo.getText();
-		
+
 	}
 
 	public void setToMealType() {
@@ -447,8 +447,8 @@ public class DashBoard {
 	}
 
 	public String getSearchFoodName() {
-	return txtFoodName.getText();
-		
+		return txtFoodName.getText();
+
 	}
 
 	public Date getSearchFromDate() throws MandatoryFieldMissingException {
@@ -462,7 +462,6 @@ public class DashBoard {
 		}
 		return d;
 	}
-		
 
 	public Date getSearchToDate() throws MandatoryFieldMissingException {
 		Calendar instance = Calendar.getInstance();
@@ -473,48 +472,54 @@ public class DashBoard {
 		return d;
 	}
 
-	public void createSearchResultRow(String name, String typeID, Date date, Time time, int weight, int cal, int fat, int carbs, int proteins, String comment) {
+	public void createSearchResultRow(String name, String typeID, Date date, Time time, int weight, int cal, int fat,
+			int carbs, int proteins, String comment) {
 		TableItem item = new TableItem(table, SWT.NULL);
-		item.setText(0,typeID);
-		item.setText(1,name);
-		item.setText(2,date.toString());
-		item.setText(3,time.toString());
-		item.setText(4,weight+"");
-		item.setText(5,cal+"");
-		item.setText(6,fat+"");
-		item.setText(7,carbs+"");
-		item.setText(8,proteins+"");
-		item.setText(9,comment);
-	
-		
+		item.setText(0, typeID);
+		item.setText(1, name);
+		item.setText(2, date.toString());
+		item.setText(3, time.toString());
+		item.setText(4, weight + "");
+		item.setText(5, cal + "");
+		item.setText(6, fat + "");
+		item.setText(7, carbs + "");
+		item.setText(8, proteins + "");
+		item.setText(9, comment);
+
 	}
 
 	public void defineEditAction(Listener listener) {
-		btnEdit.addListener(SWT.Selection,listener);
-		
+		btnEdit.addListener(SWT.Selection, listener);
+
 	}
 
 	public int getSelectedRow() {
 		return table.getSelectionIndex();
-		
+
 	}
 
 	public void setNewDate(Date date) {
-		
+
 		tDate.setDate(date.getYear(), date.getMonth(), date.getDay());
 
-		
 	}
 
 	public void setNewTime(Time time) {
-		tTime.setTime(time.getHours(),time.getMinutes(), time.getSeconds());
+		tTime.setTime(time.getHours(), time.getMinutes(), time.getSeconds());
 
-		
 	}
 
 	public void setNewMealType(FoodIntakeType intakeType) {
 		combo.setText(intakeType.mealName());
-		
+
+	}
+
+	public void defineDeleteAction(Listener listener) {
+		btnDelete.addListener(SWT.Selection, listener);
+	}
+
+	public void clearTable() {
+		table.removeAll();
 	}
 
 }
