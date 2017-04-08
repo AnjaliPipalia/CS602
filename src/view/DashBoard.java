@@ -3,6 +3,7 @@
  */
 package view;
 
+import java.awt.Window;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
@@ -25,9 +26,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import exception.MandatoryFieldMissingException;
+import food.FoodIntakeType;
 import main.Utils;
 
 /**
@@ -47,6 +50,12 @@ public class DashBoard {
 	private Text tWeight;
 	private Text tComments;
 	private DateTime tTime;
+	private Combo combo;
+	private Button btnSearch;
+	private Text txtFoodName;
+	private DateTime FromDateTime;
+	private DateTime ToDateTime;
+	private Table table;
 
 	// protected Shell shlDietTracker;
 	public DashBoard() {
@@ -109,7 +118,8 @@ public class DashBoard {
 		lblMealType.setBounds(858, 35, 68, 20);
 		lblMealType.setText("Meal Type");
 
-		Combo combo = new Combo(grpDietDetails, SWT.NONE);
+		combo = new Combo(grpDietDetails, SWT.NONE);
+		combo.setItems(new String[] {"Breakfast", "Lunch", "Dinner", "Snacks", "PartyMeal", "Meal", "Others"});
 		combo.setBounds(932, 32, 235, 28);
 
 		Label lblDate = new Label(grpDietDetails, SWT.CENTER);
@@ -196,10 +206,13 @@ public class DashBoard {
 		grpSearchResults.setText("Search Results");
 		grpSearchResults.setBounds(10, 94, 1177, 298);
 
-		Table table = new Table(grpSearchResults, SWT.BORDER | SWT.FULL_SELECTION);
+		table = new Table(grpSearchResults, SWT.BORDER | SWT.FULL_SELECTION);
 		table.setBounds(10, 25, 1157, 227);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+//		table.addListener(SWT.SetData, new Listener() {
+//			public void handleEvent(Event event) {
+//			TableItem item = (TableItem) event.item;
 
 		setTableHeaders(table);
 
@@ -214,7 +227,7 @@ public class DashBoard {
 	}
 
 	private void setTableHeaders(Table table) {
-		addColumn(table, "", 52);
+		
 		addColumn(table, "Meal Type");
 		addColumn(table, "Food Name");
 		addColumn(table, "Date");
@@ -248,7 +261,7 @@ public class DashBoard {
 		lblFoodNameLabel.setBounds(10, 31, 82, 29);
 		lblFoodNameLabel.setText("Food Name");
 
-		Text txtFoodName = new Text(grpSearch, SWT.BORDER);
+		txtFoodName = new Text(grpSearch, SWT.BORDER);
 		txtFoodName.setBounds(98, 31, 530, 29);
 
 		Label lblFromDateLabel = new Label(grpSearch, SWT.CENTER);
@@ -257,7 +270,7 @@ public class DashBoard {
 		lblFromDateLabel.setBounds(634, 31, 70, 29);
 		lblFromDateLabel.setText("From Date");
 
-		DateTime FromDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
+		 FromDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
 		FromDateTime.setBounds(710, 31, 102, 28);
 
 		Label lblToDateLabel = new Label(grpSearch, SWT.CENTER);
@@ -266,12 +279,12 @@ public class DashBoard {
 		lblToDateLabel.setBounds(818, 31, 52, 29);
 		lblToDateLabel.setText("To Date");
 
-		DateTime ToDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
+		ToDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
 		ToDateTime.setBounds(876, 31, 102, 28);
 
-		Button btnSearchButton = new Button(grpSearch, SWT.NONE);
-		btnSearchButton.setBounds(984, 31, 183, 29);
-		btnSearchButton.setText("Search");
+		btnSearch = new Button(grpSearch, SWT.NONE);
+		btnSearch.setBounds(984, 31, 183, 29);
+		btnSearch.setText("Search");
 	}
 
 	public void defineSaveAction(Listener listener) {
@@ -415,6 +428,65 @@ public class DashBoard {
 		Calendar instance = Calendar.getInstance();
 		tTime.setTime(instance.get(Calendar.HOUR_OF_DAY), instance.get(Calendar.MINUTE), instance.get(Calendar.SECOND));
 
+	}
+
+	public String getFoodIntakeType() throws MandatoryFieldMissingException {
+		if(combo.getText()==null||combo.getText().equals("")){
+			throw new MandatoryFieldMissingException("Please enter Meal Type");
+		}
+		return combo.getText();
+		
+	}
+
+	public void setToMealType() {
+		combo.setText(FoodIntakeType.DUMMY.mealName());
+	}
+
+	public void defineSearchAction(Listener listener) {
+		btnSearch.addListener(SWT.Selection, listener);
+	}
+
+	public String getSearchFoodName() {
+	return txtFoodName.getText();
+		
+	}
+
+	public Date getSearchFromDate() throws MandatoryFieldMissingException {
+		Calendar instance = Calendar.getInstance();
+		instance.set(Calendar.DAY_OF_MONTH, FromDateTime.getDay());
+		instance.set(Calendar.MONTH, FromDateTime.getMonth());
+		instance.set(Calendar.YEAR, FromDateTime.getYear());
+		Date d = new Date(instance.getTime().getTime());
+		if (Utils.getTodaysDate().compareTo(d) < 0) {
+			throw new MandatoryFieldMissingException("Invalid date");
+		}
+		return d;
+	}
+		
+
+	public Date getSearchToDate() throws MandatoryFieldMissingException {
+		Calendar instance = Calendar.getInstance();
+		instance.set(Calendar.DAY_OF_MONTH, ToDateTime.getDay());
+		instance.set(Calendar.MONTH, ToDateTime.getMonth());
+		instance.set(Calendar.YEAR, ToDateTime.getYear());
+		Date d = new Date(instance.getTime().getTime());
+		return d;
+	}
+
+	public void createSearchResultRow(String name, String typeID, Date date, Time time, int weight, int cal, int fat, int carbs, int proteins, String comment) {
+		TableItem item = new TableItem(table, SWT.NULL);
+		item.setText(0,typeID);
+		item.setText(1,name);
+		item.setText(2,date.toString());
+		item.setText(3,time.toString());
+		item.setText(4,weight+"");
+		item.setText(5,cal+"");
+		item.setText(6,fat+"");
+		item.setText(7,carbs+"");
+		item.setText(8,proteins+"");
+		item.setText(9,comment);
+	
+		
 	}
 
 }

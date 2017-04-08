@@ -46,35 +46,54 @@ public class Controller {
 		addCarbsValidation();
 		addProteinsValidation();
 		addWeightValidation();
-		
+
 		defineSearchAction();
+		// defineSearchResults();
+
 	}
 
+	// private void defineSearchResults() {
+	// window.de
+	//
+	// }
+
 	private void defineSearchAction() {
-				window.defineSearchAction(new Listener() {
+		window.defineSearchAction(new Listener() {
 
 			@Override
 			public void handleEvent(Event event) {
 				List<FoodIntake> foodList = new ArrayList<>();
 				try {
-				
+
 					String fdName = window.getSearchFoodName();
-//					System.out.println(fdName);
+					// System.out.println(fdName);
 					Date fromDate = window.getSearchFromDate();
-//					System.out.println(fromDate);
+					// System.out.println(fromDate);
 					Date toDate = window.getSearchToDate();
-//					System.out.println(toDate);
+					// System.out.println(toDate);
 					foodList = database.read(fdName, fromDate, toDate);
-					
-					//System.out.println(foodList);
+					for (int i = 0; i < foodList.size(); i++) {
+						String name = foodList.get(i).getName();
+						String typeID = foodList.get(i).getIntakeType().mealName();
+						Date date = foodList.get(i).getDate();
+						Time time = foodList.get(i).getTime();
+						int weight = foodList.get(i).getWeight();
+						int cal = foodList.get(i).getCalories();
+						int fat = foodList.get(i).getFat();
+						int carbs = foodList.get(i).getCarbohydrates();
+						int proteins = foodList.get(i).getProteins();
+						String comment = foodList.get(i).getComments();
+						window.createSearchResultRow(name,typeID,date,time,weight,cal,fat,carbs,proteins,comment);
+					}
+
+					// System.out.println(foodList);
 				} catch (MandatoryFieldMissingException e) {
 					e.printStackTrace();
 				}
-				
+
 			}
-			});				
-			
-		
+		});
+
 	}
 
 	private void addFoodNameValidation() {
@@ -125,7 +144,6 @@ public class Controller {
 			}
 		};
 	}
-	
 
 	private void defineSaveAction() {
 		window.defineSaveAction(new Listener() {
@@ -143,7 +161,7 @@ public class Controller {
 					int proteins = window.getNewProteins();
 					String comments = window.getNewComments();
 					FoodIntakeType foodIntakeType = FoodIntakeType.valueOf(window.getFoodIntakeType().toUpperCase());
-					
+
 					FoodIntake foodIntake = new FoodIntake();
 					foodIntake.setName(fdName);
 					foodIntake.setDate(date);
@@ -156,7 +174,7 @@ public class Controller {
 					foodIntake.setTime(time);
 					foodIntake.setIntakeType(foodIntakeType);
 					database.create(foodIntake);
-					
+
 					if (showMessageDialog()) {
 						window.setNewFoodName(" ");
 						window.setToCurrDate();
@@ -166,8 +184,8 @@ public class Controller {
 						window.setNewWeight("0");
 						window.setNewProteins("0");
 						window.setNewComments("");
-					    window.setToCurrTime();
-					    window.setToMealType();
+						window.setToCurrTime();
+						window.setToMealType();
 
 					}
 				}

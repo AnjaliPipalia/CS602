@@ -1,6 +1,7 @@
 package main;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.Calendar;
 
 public class Utils {
@@ -10,7 +11,7 @@ public class Utils {
 
 	}
 
-	public static Date getTodaysTime() {
+	public static Time getTodaysTime() {
 		Calendar instance = Calendar.getInstance();
-		return new Date(instance.getTime().getTime());	}
+		return new Time(instance.getTime().getTime());	}
 }

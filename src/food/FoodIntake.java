@@ -31,8 +31,7 @@ public class FoodIntake {
 		this.comments = "";
 		this.date = date;
 		this.time = Utils.getTodaysTime();
-		;
-		this.intakeType = FoodIntakeType.LUNCH;
+		this.intakeType = FoodIntakeType.OTHERS;
 	}
 
 	public FoodIntake() {
@@ -46,7 +45,7 @@ public class FoodIntake {
 		this.comments = "";
 		this.date = Utils.getTodaysDate();
 		this.time = Utils.getTodaysTime();
-		this.intakeType = FoodIntakeType.LUNCH;
+		this.intakeType = FoodIntakeType.OTHERS;
 	}
 
 	/*
@@ -58,6 +57,20 @@ public class FoodIntake {
 
 	public void setIntakeID(int i) {
 		this.intakeID = i;
+	}
+
+	/**
+	 * @return the intakeType
+	 */
+	public FoodIntakeType getIntakeType() {
+		return intakeType;
+	}
+
+	/**
+	 * @param foodIntakeType the intakeType to set
+	 */
+	public void setIntakeType(FoodIntakeType foodIntakeType) {
+		this.intakeType = foodIntakeType;
 	}
 
 	/*

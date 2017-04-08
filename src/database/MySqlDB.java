@@ -110,15 +110,16 @@ public class MySqlDB implements Database {
 				FoodIntake foodIntake = new FoodIntake();
 
 				foodIntake.setName(rs.getString("Name"));
-				foodIntake.setDate(rs.getDate("IntakeTypeID"));
+				foodIntake.setIntakeID(rs.getInt("IntakeID"));
+				foodIntake.setIntakeType(FoodIntakeType.values()[rs.getInt("IntakeTypeID")]);
 				foodIntake.setDate(rs.getDate("Date"));
 				foodIntake.setTime(rs.getTime("Time"));
-				foodIntake.setDate(rs.getDate("Weight"));
-				foodIntake.setDate(rs.getDate("Calories"));
-				foodIntake.setTime(rs.getTime("Fat"));
-				foodIntake.setDate(rs.getDate("Carbohydrates"));
-				foodIntake.setDate(rs.getDate("Proteins"));
-				foodIntake.setTime(rs.getTime("Comments"));
+				foodIntake.setWeight(rs.getInt("Weight"));
+				foodIntake.setCalories(rs.getInt("Calories"));
+				foodIntake.setFat(rs.getInt("Fat"));
+				foodIntake.setCarbohydrates(rs.getInt("Carbohydrates"));
+				foodIntake.setProteins(rs.getInt("Proteins"));
+				foodIntake.setComments(rs.getString("Comments"));
 
 				foodList.add(foodIntake);
 
