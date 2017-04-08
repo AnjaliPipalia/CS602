@@ -6,7 +6,9 @@ package controller;
 import java.awt.Window;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -18,6 +20,7 @@ import org.eclipse.swt.widgets.Listener;
 import database.Database;
 import exception.MandatoryFieldMissingException;
 import food.FoodIntake;
+import food.FoodIntakeType;
 import view.DashBoard;
 
 /**
@@ -43,6 +46,35 @@ public class Controller {
 		addCarbsValidation();
 		addProteinsValidation();
 		addWeightValidation();
+		
+		defineSearchAction();
+	}
+
+	private void defineSearchAction() {
+				window.defineSearchAction(new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				List<FoodIntake> foodList = new ArrayList<>();
+				try {
+				
+					String fdName = window.getSearchFoodName();
+//					System.out.println(fdName);
+					Date fromDate = window.getSearchFromDate();
+//					System.out.println(fromDate);
+					Date toDate = window.getSearchToDate();
+//					System.out.println(toDate);
+					foodList = database.read(fdName, fromDate, toDate);
+					
+					//System.out.println(foodList);
+				} catch (MandatoryFieldMissingException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			});				
+			
+		
 	}
 
 	private void addFoodNameValidation() {
@@ -93,6 +125,7 @@ public class Controller {
 			}
 		};
 	}
+	
 
 	private void defineSaveAction() {
 		window.defineSaveAction(new Listener() {
@@ -109,9 +142,9 @@ public class Controller {
 					int weight = window.getNewWeight();
 					int proteins = window.getNewProteins();
 					String comments = window.getNewComments();
-
+					FoodIntakeType foodIntakeType = FoodIntakeType.valueOf(window.getFoodIntakeType().toUpperCase());
+					
 					FoodIntake foodIntake = new FoodIntake();
-
 					foodIntake.setName(fdName);
 					foodIntake.setDate(date);
 					foodIntake.setCalories(calories);
@@ -121,8 +154,9 @@ public class Controller {
 					foodIntake.setProteins(proteins);
 					foodIntake.setComments(comments);
 					foodIntake.setTime(time);
-
+					foodIntake.setIntakeType(foodIntakeType);
 					database.create(foodIntake);
+					
 					if (showMessageDialog()) {
 						window.setNewFoodName(" ");
 						window.setToCurrDate();
@@ -133,6 +167,7 @@ public class Controller {
 						window.setNewProteins("0");
 						window.setNewComments("");
 					    window.setToCurrTime();
+					    window.setToMealType();
 
 					}
 				}

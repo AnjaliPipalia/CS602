@@ -36,7 +36,8 @@ public class MySqlDB implements Database {
 	public boolean create(FoodIntake foodIntake) {
 		open();
 		// the mysql insert statement
-		String query = " insert into FoodIntake (Name, Date,Time,Weight,Calories,Fat,Carbohydrates,Proteins,Comments)" + " values (?, ?,?,?,?,?,?,?,?)";
+		String query = " insert into FoodIntake (Name, Date,Time,Weight,Calories,Fat,Carbohydrates,Proteins,Comments,IntakeTypeID)"
+				+ " values (?, ?,?,?,?,?,?,?,?,?)";
 
 		// create the mysql insert preparedstatement
 		PreparedStatement preparedStmt;
@@ -44,13 +45,14 @@ public class MySqlDB implements Database {
 			preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setString(1, foodIntake.getName());
 			preparedStmt.setDate(2, foodIntake.getDate());
-			preparedStmt.setDate(3, foodIntake.getTime());
+			preparedStmt.setTime(3, foodIntake.getTime());
 			preparedStmt.setInt(4, foodIntake.getWeight());
 			preparedStmt.setInt(5, foodIntake.getCalories());
 			preparedStmt.setInt(6, foodIntake.getFat());
 			preparedStmt.setInt(7, foodIntake.getCarbohydrates());
 			preparedStmt.setInt(8, foodIntake.getProteins());
 			preparedStmt.setString(9, foodIntake.getComments());
+			preparedStmt.setInt(10, foodIntake.getIntakeType().ordinal());
 			preparedStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -94,7 +96,7 @@ public class MySqlDB implements Database {
 	 */
 	@Override
 	public List<FoodIntake> read(String foodName, Date from, Date to) {
-		List<FoodIntake> foodList  = new ArrayList<>();
+		List<FoodIntake> foodList = new ArrayList<>();
 		open();
 		try {
 
@@ -105,10 +107,21 @@ public class MySqlDB implements Database {
 			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
-				String name = rs.getString("Name");
-				Date date = rs.getDate("Date");
-				foodList.add(new FoodIntake(name,date));
-				
+				FoodIntake foodIntake = new FoodIntake();
+
+				foodIntake.setName(rs.getString("Name"));
+				foodIntake.setDate(rs.getDate("IntakeTypeID"));
+				foodIntake.setDate(rs.getDate("Date"));
+				foodIntake.setTime(rs.getTime("Time"));
+				foodIntake.setDate(rs.getDate("Weight"));
+				foodIntake.setDate(rs.getDate("Calories"));
+				foodIntake.setTime(rs.getTime("Fat"));
+				foodIntake.setDate(rs.getDate("Carbohydrates"));
+				foodIntake.setDate(rs.getDate("Proteins"));
+				foodIntake.setTime(rs.getTime("Comments"));
+
+				foodList.add(foodIntake);
+
 			}
 
 		} catch (SQLException e) {
@@ -126,8 +139,8 @@ public class MySqlDB implements Database {
 		if (foodName != null && !foodName.trim().equals("")) {
 			query += "Name = '" + foodName + "' ";
 		}
-		if((foodName!=null && !foodName.trim().equals(""))&&(from != null ||to!=null)){
-			query+=" AND ";
+		if ((foodName != null && !foodName.trim().equals("")) && (from != null || to != null)) {
+			query += " AND ";
 		}
 		if (from != null && to == null) {
 			query += "Date > '" + from + "' ";
