@@ -34,6 +34,7 @@ public class Controller {
 	private Database database;
 	private DashBoard window;
 	boolean inEditMode = false;
+	private int index = -1;
 	List<FoodIntake> foodList = new ArrayList<>();
 
 	public Controller(Database database, DashBoard window) {
@@ -48,6 +49,7 @@ public class Controller {
 		defineEditAction();
 		defineNewAction();
 		defineSaveAction();
+
 		addFoodNameValidation();
 		addCaloriesValidation();
 		addFatValidation();
@@ -55,7 +57,61 @@ public class Controller {
 		addProteinsValidation();
 		addWeightValidation();
 
+		defineUpdateAction();
 		defineDeleteAction();
+
+	}
+
+	private void defineUpdateAction() {
+		window.defineUpdateAction(new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				try {
+
+					String fdName = window.getNewFoodName();
+					Date date = window.getNewFoodDate();
+					Time time = window.getNewTime();
+					int calories = window.getNewCalories();
+					int fat = window.getNewFat();
+					int carbohydrates = window.getNewCarbohydrates();
+					int weight = window.getNewWeight();
+					int proteins = window.getNewProteins();
+					String comments = window.getNewComments();
+					FoodIntakeType foodIntakeType = FoodIntakeType.valueOf(window.getFoodIntakeType().toUpperCase());
+
+					index = window.getSelectedRow();
+					if (index < 0) {
+						JOptionPane.showMessageDialog(null, "No entries selected");
+						return;
+					}
+					window.enteredEditMode();
+					FoodIntake foodIntake = foodList.get(index);
+					foodIntake.setName(fdName);
+					foodIntake.setDate(date);
+					foodIntake.setCalories(calories);
+					foodIntake.setFat(fat);
+					foodIntake.setCarbohydrates(carbohydrates);
+					foodIntake.setWeight(weight);
+					foodIntake.setProteins(proteins);
+					foodIntake.setComments(comments);
+					foodIntake.setTime(time);
+					foodIntake.setIntakeType(foodIntakeType);
+					if (database.update(foodIntake)) {
+
+						JOptionPane.showMessageDialog(null, "Updated successfully!");
+					}
+				}
+
+				catch (MandatoryFieldMissingException me) {
+					JOptionPane.showMessageDialog(null, me.getMessage());
+					me.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, "Failed to update!");
+					e.printStackTrace();
+				}
+			}
+		});
 
 	}
 
@@ -65,6 +121,7 @@ public class Controller {
 			@Override
 			public void handleEvent(Event arg0) {
 				window.enteredNewMode();
+				index = -1;
 				window.setNewFoodName(" ");
 				window.setToCurrDate();
 				window.setNewCalories("0");
@@ -87,7 +144,7 @@ public class Controller {
 
 			@Override
 			public void handleEvent(Event arg0) {
-				int index = window.getSelectedRow();
+				index = window.getSelectedRow();
 				if (index < 0) {
 					JOptionPane.showMessageDialog(null, "No entries selected");
 					return;
@@ -97,6 +154,7 @@ public class Controller {
 					JOptionPane.showMessageDialog(null, "Deleted Successfully");
 					foodList.remove(index);
 					window.deleteRow(index);
+					index = -1;
 				} else
 					JOptionPane.showMessageDialog(null, "Failed to delete!");
 
@@ -110,7 +168,7 @@ public class Controller {
 
 			@Override
 			public void handleEvent(Event arg0) {
-				int index = window.getSelectedRow();
+				index = window.getSelectedRow();
 				if (index < 0) {
 					JOptionPane.showMessageDialog(null, "No entries selected");
 					return;
@@ -127,7 +185,6 @@ public class Controller {
 				window.setNewComments(foodIntake.getComments());
 				window.setNewTime(foodIntake.getTime());
 				window.setNewMealType(foodIntake.getIntakeType());
-
 			}
 		});
 	}
@@ -144,6 +201,7 @@ public class Controller {
 					Date fromDate = window.getSearchFromDate();
 					Date toDate = window.getSearchToDate();
 					window.clearTable();
+					index = -1;
 					foodList = database.read(fdName, fromDate, toDate);
 					for (int i = 0; i < foodList.size(); i++) {
 						String name = foodList.get(i).getName();
@@ -236,7 +294,7 @@ public class Controller {
 			@Override
 			public void handleEvent(Event event) {
 				try {
-
+					index = -1;
 					String fdName = window.getNewFoodName();
 					Date date = window.getNewFoodDate();
 					Time time = window.getNewTime();

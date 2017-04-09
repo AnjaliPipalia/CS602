@@ -548,4 +548,9 @@ public class DashBoard {
 		
 	}
 
+	public void defineUpdateAction(Listener listener) {
+		btnUpdate.addListener(SWT.Selection, listener);
+		
+	}
+
 }

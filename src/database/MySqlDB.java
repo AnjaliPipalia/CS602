@@ -164,16 +164,24 @@ public class MySqlDB implements Database {
 		open();
 		try {
 			// create our java preparedstatement using a sql update query
-			PreparedStatement preparedStmts = connection
-					.prepareStatement("UPDATE FoodIntake SET Name = ? WHERE IntakeID = ? ");
+			PreparedStatement preparedStmt = connection.prepareStatement("UPDATE FoodIntake SET Name = ?,Date = ?,Time=?,Weight=?,"
+					+ "Calories=?,Fat=?,Carbohydrates=?,Proteins=?,"
+					+ "Comments=?,IntakeTypeID=? WHERE IntakeID = ?; ");
 
-			// set the preparedstatement parameters
-			preparedStmts.setString(1, foodIntake.getName());
-			preparedStmts.setInt(2, foodIntake.getIntakeID());
-
+			preparedStmt.setString(1, foodIntake.getName());
+			preparedStmt.setDate(2, foodIntake.getDate());
+			preparedStmt.setTime(3, foodIntake.getTime());
+			preparedStmt.setInt(4, foodIntake.getWeight());
+			preparedStmt.setInt(5, foodIntake.getCalories());
+			preparedStmt.setInt(6, foodIntake.getFat());
+			preparedStmt.setInt(7, foodIntake.getCarbohydrates());
+			preparedStmt.setInt(8, foodIntake.getProteins());
+			preparedStmt.setString(9, foodIntake.getComments());
+			preparedStmt.setInt(10, foodIntake.getIntakeType().ordinal());
+			preparedStmt.setInt(11, foodIntake.getIntakeID());
 			// call executeUpdate to execute our sql update statement
-			preparedStmts.executeUpdate();
-			preparedStmts.close();
+			preparedStmt.executeUpdate();
+			preparedStmt.close();
 		} catch (SQLException se) {
 			se.printStackTrace();
 			return false;
