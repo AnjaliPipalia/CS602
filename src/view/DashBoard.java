@@ -543,4 +543,9 @@ public class DashBoard {
 		btnNew.addListener(SWT.Selection,listener);
 	}
 
+	public void deleteRow(int index) {
+		table.remove(index);
+		
+	}
+
 }

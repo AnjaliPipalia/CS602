@@ -60,7 +60,7 @@ public class Controller {
 	}
 
 	private void defineNewAction() {
-		window.defineNewAction(new Listener(){
+		window.defineNewAction(new Listener() {
 
 			@Override
 			public void handleEvent(Event arg0) {
@@ -75,11 +75,11 @@ public class Controller {
 				window.setNewComments("");
 				window.setToCurrTime();
 				window.setToMealType();
-				
+
 			}
-	
+
 		});
-		
+
 	}
 
 	private void defineDeleteAction() {
@@ -88,10 +88,15 @@ public class Controller {
 			@Override
 			public void handleEvent(Event arg0) {
 				int index = window.getSelectedRow();
+				if (index < 0) {
+					JOptionPane.showMessageDialog(null, "No entries selected");
+					return;
+				}
 				FoodIntake foodIntake = foodList.get(index);
 				if (database.delete(foodIntake)) {
 					JOptionPane.showMessageDialog(null, "Deleted Successfully");
-
+					foodList.remove(index);
+					window.deleteRow(index);
 				} else
 					JOptionPane.showMessageDialog(null, "Failed to delete!");
 
@@ -105,8 +110,12 @@ public class Controller {
 
 			@Override
 			public void handleEvent(Event arg0) {
-				window.enteredEditMode();
 				int index = window.getSelectedRow();
+				if (index < 0) {
+					JOptionPane.showMessageDialog(null, "No entries selected");
+					return;
+				}
+				window.enteredEditMode();
 				FoodIntake foodIntake = foodList.get(index);
 				window.setNewFoodName(foodIntake.getName());
 				window.setNewDate(foodIntake.getDate());
@@ -118,7 +127,7 @@ public class Controller {
 				window.setNewComments(foodIntake.getComments());
 				window.setNewTime(foodIntake.getTime());
 				window.setNewMealType(foodIntake.getIntakeType());
-				
+
 			}
 		});
 	}
@@ -207,11 +216,16 @@ public class Controller {
 		return new VerifyListener() {
 
 			@Override
-			public void verifyText(VerifyEvent event) {
-				if (event.character != '\u0008' && event.character != '\u007F' && !event.text.matches("[0-9]")) {
-					event.doit = false;
-					return;
+			public void verifyText(VerifyEvent e) {
+				String text = e.text;
+				for (int i = 0; i < text.length(); i++) {
+					char ch = text.charAt(i);
+					if (!Character.isDigit(ch) && (ch != '\u0008' || ch != '\u007F')) {
+						e.doit = false;
+						return;
+					}
 				}
+
 			}
 		};
 	}
@@ -222,7 +236,7 @@ public class Controller {
 			@Override
 			public void handleEvent(Event event) {
 				try {
-					
+
 					String fdName = window.getNewFoodName();
 					Date date = window.getNewFoodDate();
 					Time time = window.getNewTime();
