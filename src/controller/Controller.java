@@ -33,6 +33,7 @@ public class Controller {
 
 	private Database database;
 	private DashBoard window;
+	boolean inEditMode = false;
 	List<FoodIntake> foodList = new ArrayList<>();
 
 	public Controller(Database database, DashBoard window) {
@@ -42,9 +43,10 @@ public class Controller {
 	}
 
 	public void initialize() {
+		window.enteredNewMode();
 		defineSearchAction();
 		defineEditAction();
-
+		defineNewAction();
 		defineSaveAction();
 		addFoodNameValidation();
 		addCaloriesValidation();
@@ -55,6 +57,29 @@ public class Controller {
 
 		defineDeleteAction();
 
+	}
+
+	private void defineNewAction() {
+		window.defineNewAction(new Listener(){
+
+			@Override
+			public void handleEvent(Event arg0) {
+				window.enteredNewMode();
+				window.setNewFoodName(" ");
+				window.setToCurrDate();
+				window.setNewCalories("0");
+				window.setNewFat("0");
+				window.setNewCarbohydrates("0");
+				window.setNewWeight("0");
+				window.setNewProteins("0");
+				window.setNewComments("");
+				window.setToCurrTime();
+				window.setToMealType();
+				
+			}
+	
+		});
+		
 	}
 
 	private void defineDeleteAction() {
@@ -80,6 +105,7 @@ public class Controller {
 
 			@Override
 			public void handleEvent(Event arg0) {
+				window.enteredEditMode();
 				int index = window.getSelectedRow();
 				FoodIntake foodIntake = foodList.get(index);
 				window.setNewFoodName(foodIntake.getName());
@@ -92,6 +118,7 @@ public class Controller {
 				window.setNewComments(foodIntake.getComments());
 				window.setNewTime(foodIntake.getTime());
 				window.setNewMealType(foodIntake.getIntakeType());
+				
 			}
 		});
 	}
@@ -195,6 +222,7 @@ public class Controller {
 			@Override
 			public void handleEvent(Event event) {
 				try {
+					
 					String fdName = window.getNewFoodName();
 					Date date = window.getNewFoodDate();
 					Time time = window.getNewTime();

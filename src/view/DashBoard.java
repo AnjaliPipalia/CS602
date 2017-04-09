@@ -58,6 +58,9 @@ public class DashBoard {
 	private Table table;
 	private Button btnEdit;
 	private Button btnDelete;
+	private Button btnUpdate;
+	private Button btnReset;
+	private Button btnNew;
 
 	// protected Shell shlDietTracker;
 	public DashBoard() {
@@ -190,16 +193,20 @@ public class DashBoard {
 
 		tComments = new Text(grpDietDetails, SWT.BORDER | SWT.MULTI);
 		tComments.setBounds(98, 131, 1069, 107);
+		
+		btnNew = new Button(grpDietDetails, SWT.NONE);
+		btnNew.setBounds(98, 244, 90, 30);
+		btnNew.setText("New");
 
 		btnSave = new Button(grpDietDetails, SWT.NONE);
 		btnSave.setBounds(885, 244, 90, 30);
 		btnSave.setText("Save");
 
-		Button btnUpdate = new Button(grpDietDetails, SWT.NONE);
+		btnUpdate = new Button(grpDietDetails, SWT.NONE);
 		btnUpdate.setBounds(981, 244, 90, 30);
 		btnUpdate.setText("Update");
 
-		Button btnReset = new Button(grpDietDetails, SWT.NONE);
+		btnReset = new Button(grpDietDetails, SWT.NONE);
 		btnReset.setBounds(1077, 244, 90, 30);
 		btnReset.setText("Reset");
 	}
@@ -490,7 +497,6 @@ public class DashBoard {
 
 	public void defineEditAction(Listener listener) {
 		btnEdit.addListener(SWT.Selection, listener);
-
 	}
 
 	public int getSelectedRow() {
@@ -520,6 +526,21 @@ public class DashBoard {
 
 	public void clearTable() {
 		table.removeAll();
+	}
+
+	public void enteredEditMode() {
+		btnSave.setEnabled(false);
+		btnUpdate.setEnabled(true);
+		btnReset.setEnabled(true);
+	}
+	public void enteredNewMode() {
+		btnSave.setEnabled(true);
+		btnUpdate.setEnabled(false);
+		btnReset.setEnabled(false);
+	}
+
+	public void defineNewAction(Listener listener) {
+		btnNew.addListener(SWT.Selection,listener);
 	}
 
 }
