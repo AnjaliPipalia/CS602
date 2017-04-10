@@ -36,6 +36,10 @@ public class Controller {
 	boolean inEditMode = false;
 	private int index = -1;
 	List<FoodIntake> foodList = new ArrayList<>();
+	protected String searchName;
+	protected Date fromDate;
+	protected Date toDate;
+	protected FoodIntake editFood;
 
 	public Controller(Database database, DashBoard window) {
 		this.database = database;
@@ -58,8 +62,21 @@ public class Controller {
 		addWeightValidation();
 
 		defineUpdateAction();
+		defineResetAction();
 		defineDeleteAction();
 
+	}
+
+	private void defineResetAction() {
+		window.defineResetAction(new Listener(){
+
+			@Override
+			public void handleEvent(Event arg0) {
+				setFoodEditDetails();
+			}
+			
+		});
+		
 	}
 
 	private void defineUpdateAction() {
@@ -100,6 +117,7 @@ public class Controller {
 					if (database.update(foodIntake)) {
 
 						JOptionPane.showMessageDialog(null, "Updated successfully!");
+						showSearchLists();
 					}
 				}
 
@@ -174,21 +192,26 @@ public class Controller {
 					return;
 				}
 				window.enteredEditMode();
-				FoodIntake foodIntake = foodList.get(index);
-				window.setNewFoodName(foodIntake.getName());
-				window.setNewDate(foodIntake.getDate());
-				window.setNewCalories(foodIntake.getCalories() + "");
-				window.setNewFat(foodIntake.getFat() + "");
-				window.setNewCarbohydrates(foodIntake.getCarbohydrates() + "");
-				window.setNewWeight(foodIntake.getWeight() + "");
-				window.setNewProteins(foodIntake.getProteins() + "");
-				window.setNewComments(foodIntake.getComments());
-				window.setNewTime(foodIntake.getTime());
-				window.setNewMealType(foodIntake.getIntakeType());
+				editFood = foodList.get(index);
+				setFoodEditDetails();
 			}
+
+			
 		});
 	}
-
+	private void setFoodEditDetails() {
+		window.setNewFoodName(editFood.getName());
+		window.setNewDate(editFood.getDate());
+		System.out.println(editFood.getDate());
+		window.setNewCalories(editFood.getCalories() + "");
+		window.setNewFat(editFood.getFat() + "");
+		window.setNewCarbohydrates(editFood.getCarbohydrates() + "");
+		window.setNewWeight(editFood.getWeight() + "");
+		window.setNewProteins(editFood.getProteins() + "");
+		window.setNewComments(editFood.getComments());
+		window.setNewTime(editFood.getTime());
+		window.setNewMealType(editFood.getIntakeType());
+	}
 	private void defineSearchAction() {
 		window.defineSearchAction(new Listener() {
 
@@ -197,34 +220,38 @@ public class Controller {
 
 				try {
 
-					String fdName = window.getSearchFoodName();
-					Date fromDate = window.getSearchFromDate();
-					Date toDate = window.getSearchToDate();
-					window.clearTable();
-					index = -1;
-					foodList = database.read(fdName, fromDate, toDate);
-					for (int i = 0; i < foodList.size(); i++) {
-						String name = foodList.get(i).getName();
-						String typeID = foodList.get(i).getIntakeType().mealName();
-						Date date = foodList.get(i).getDate();
-						Time time = foodList.get(i).getTime();
-						int weight = foodList.get(i).getWeight();
-						int cal = foodList.get(i).getCalories();
-						int fat = foodList.get(i).getFat();
-						int carbs = foodList.get(i).getCarbohydrates();
-						int proteins = foodList.get(i).getProteins();
-						String comment = foodList.get(i).getComments();
-						window.createSearchResultRow(name, typeID, date, time, weight, cal, fat, carbs, proteins,
-								comment);
-					}
+					searchName = window.getSearchFoodName();
+					fromDate = window.getSearchFromDate();
+					toDate = window.getSearchToDate();
+					showSearchLists();
 
 				} catch (MandatoryFieldMissingException e) {
 					e.printStackTrace();
 				}
 
 			}
+
 		});
 
+	}
+
+	private void showSearchLists() {
+		window.clearTable();
+		index = -1;
+		foodList = database.read(searchName, fromDate, toDate);
+		for (int i = 0; i < foodList.size(); i++) {
+			String name = foodList.get(i).getName();
+			String typeID = foodList.get(i).getIntakeType().mealName();
+			Date date = foodList.get(i).getDate();
+			Time time = foodList.get(i).getTime();
+			int weight = foodList.get(i).getWeight();
+			int cal = foodList.get(i).getCalories();
+			int fat = foodList.get(i).getFat();
+			int carbs = foodList.get(i).getCarbohydrates();
+			int proteins = foodList.get(i).getProteins();
+			String comment = foodList.get(i).getComments();
+			window.createSearchResultRow(name, typeID, date, time, weight, cal, fat, carbs, proteins, comment);
+		}
 	}
 
 	private void addFoodNameValidation() {

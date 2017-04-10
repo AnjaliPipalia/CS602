@@ -193,7 +193,7 @@ public class DashBoard {
 
 		tComments = new Text(grpDietDetails, SWT.BORDER | SWT.MULTI);
 		tComments.setBounds(98, 131, 1069, 107);
-		
+
 		btnNew = new Button(grpDietDetails, SWT.NONE);
 		btnNew.setBounds(98, 244, 90, 30);
 		btnNew.setText("New");
@@ -505,12 +505,15 @@ public class DashBoard {
 	}
 
 	public void setNewDate(Date date) {
-
-		tDate.setDate(date.getYear(), date.getMonth(), date.getDay());
+		Calendar instance = Calendar.getInstance();
+		instance.set(date.getYear(), date.getMonth(), date.getDay());
+		
+		tDate.setDate(instance.get(Calendar.YEAR), instance.get(Calendar.MONTH), instance.get(Calendar.DAY_OF_MONTH));
 
 	}
 
 	public void setNewTime(Time time) {
+		//Calendar instance = Calendar.getInstance();
 		tTime.setTime(time.getHours(), time.getMinutes(), time.getSeconds());
 
 	}
@@ -533,6 +536,7 @@ public class DashBoard {
 		btnUpdate.setEnabled(true);
 		btnReset.setEnabled(true);
 	}
+
 	public void enteredNewMode() {
 		btnSave.setEnabled(true);
 		btnUpdate.setEnabled(false);
@@ -540,17 +544,21 @@ public class DashBoard {
 	}
 
 	public void defineNewAction(Listener listener) {
-		btnNew.addListener(SWT.Selection,listener);
+		btnNew.addListener(SWT.Selection, listener);
 	}
 
 	public void deleteRow(int index) {
 		table.remove(index);
-		
+
 	}
 
 	public void defineUpdateAction(Listener listener) {
 		btnUpdate.addListener(SWT.Selection, listener);
-		
+
+	}
+
+	public void defineResetAction(Listener listener) {
+		btnReset.addListener(SWT.Selection, listener);
 	}
 
 }
