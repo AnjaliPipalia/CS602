@@ -4,6 +4,8 @@
 package main;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -11,6 +13,7 @@ import java.nio.channels.OverlappingFileLockException;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
@@ -30,13 +33,21 @@ public class NutrientsTrackerApp {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Database database = DatabaseFactory.getDatabase();
+		
 		try {
 			if (isRunning()) {
 				JOptionPane.showMessageDialog(null, "Already Running...");
 				System.exit(1);
 			} else {
+				Properties prop = new Properties();
+				InputStream input = null;
+				input = new FileInputStream("DietTracker.properties");
+
+				// load a properties file
+				prop.load(input);
+				
+				Configuration.setProperties(prop);
+				Database database = DatabaseFactory.getDatabase();
 				DashBoard window = new DashBoard();
 				Controller controller = new Controller(database, window);
 				controller.initialize();

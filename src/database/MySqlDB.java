@@ -17,6 +17,7 @@ import java.util.List;
 
 import food.FoodIntake;
 import food.FoodIntakeType;
+import main.Configuration;
 
 /**
  * @author arp226
@@ -231,8 +232,8 @@ public class MySqlDB implements Database {
 		}
 
 		try {
-			connection = DriverManager.getConnection("jdbc:mysql://sql2.njit.edu/arp226", "arp226", "5WucrXW9e");
-
+			//connection = DriverManager.getConnection("jdbc:mysql://sql2.njit.edu/arp226", "arp226", "5WucrXW9e");
+			connection = DriverManager.getConnection(Configuration.getDBUrl(),Configuration.getDBUserName(),Configuration.getDBPassword());
 		} catch (SQLException e) {
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
