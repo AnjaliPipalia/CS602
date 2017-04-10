@@ -138,7 +138,7 @@ public class MySqlDB implements Database {
 	private String getSearchQuery(String foodName, Date from, Date to) {
 		String query = "select * from FoodIntake where ";
 		if (foodName != null && !foodName.trim().equals("")) {
-			query += "Name = '" + foodName + "' ";
+			query += "Name like '%"+ foodName + "%'";
 		}
 		if ((foodName != null && !foodName.trim().equals("")) && (from != null || to != null)) {
 			query += " AND ";

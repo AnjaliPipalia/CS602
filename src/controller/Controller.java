@@ -202,7 +202,6 @@ public class Controller {
 	private void setFoodEditDetails() {
 		window.setNewFoodName(editFood.getName());
 		window.setNewDate(editFood.getDate());
-		System.out.println(editFood.getDate());
 		window.setNewCalories(editFood.getCalories() + "");
 		window.setNewFat(editFood.getFat() + "");
 		window.setNewCarbohydrates(editFood.getCarbohydrates() + "");
@@ -226,6 +225,7 @@ public class Controller {
 					showSearchLists();
 
 				} catch (MandatoryFieldMissingException e) {
+					JOptionPane.showMessageDialog(null,e.getMessage());
 					e.printStackTrace();
 				}
 

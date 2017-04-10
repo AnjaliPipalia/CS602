@@ -506,15 +506,15 @@ public class DashBoard {
 
 	public void setNewDate(Date date) {
 		Calendar instance = Calendar.getInstance();
-		instance.set(date.getYear(), date.getMonth(), date.getDay());
-		
+		instance.setTime(date);
 		tDate.setDate(instance.get(Calendar.YEAR), instance.get(Calendar.MONTH), instance.get(Calendar.DAY_OF_MONTH));
 
 	}
 
 	public void setNewTime(Time time) {
-		//Calendar instance = Calendar.getInstance();
-		tTime.setTime(time.getHours(), time.getMinutes(), time.getSeconds());
+		Calendar instance = Calendar.getInstance();
+		instance.setTime(time);
+		tTime.setTime(instance.get(Calendar.HOUR_OF_DAY), instance.get(Calendar.MINUTE), instance.get(Calendar.SECOND));
 
 	}
 
