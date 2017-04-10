@@ -96,25 +96,19 @@ public class Controller {
 					int proteins = window.getNewProteins();
 					String comments = window.getNewComments();
 					FoodIntakeType foodIntakeType = FoodIntakeType.valueOf(window.getFoodIntakeType().toUpperCase());
-
-					index = window.getSelectedRow();
-					if (index < 0) {
-						JOptionPane.showMessageDialog(null, "No entries selected");
-						return;
-					}
 					window.enteredEditMode();
-					FoodIntake foodIntake = foodList.get(index);
-					foodIntake.setName(fdName);
-					foodIntake.setDate(date);
-					foodIntake.setCalories(calories);
-					foodIntake.setFat(fat);
-					foodIntake.setCarbohydrates(carbohydrates);
-					foodIntake.setWeight(weight);
-					foodIntake.setProteins(proteins);
-					foodIntake.setComments(comments);
-					foodIntake.setTime(time);
-					foodIntake.setIntakeType(foodIntakeType);
-					if (database.update(foodIntake)) {
+					
+					editFood.setName(fdName);
+					editFood.setDate(date);
+					editFood.setCalories(calories);
+					editFood.setFat(fat);
+					editFood.setCarbohydrates(carbohydrates);
+					editFood.setWeight(weight);
+					editFood.setProteins(proteins);
+					editFood.setComments(comments);
+					editFood.setTime(time);
+					editFood.setIntakeType(foodIntakeType);
+					if (database.update(editFood)) {
 
 						JOptionPane.showMessageDialog(null, "Updated successfully!");
 						showSearchLists();
@@ -223,7 +217,7 @@ public class Controller {
 					fromDate = window.getSearchFromDate();
 					toDate = window.getSearchToDate();
 					showSearchLists();
-
+					
 				} catch (MandatoryFieldMissingException e) {
 					JOptionPane.showMessageDialog(null,e.getMessage());
 					e.printStackTrace();
@@ -239,6 +233,10 @@ public class Controller {
 		window.clearTable();
 		index = -1;
 		foodList = database.read(searchName, fromDate, toDate);
+		if(foodList.isEmpty())
+		{
+			JOptionPane.showMessageDialog(null,"No search results to display.");
+		}
 		for (int i = 0; i < foodList.size(); i++) {
 			String name = foodList.get(i).getName();
 			String typeID = foodList.get(i).getIntakeType().mealName();
@@ -251,6 +249,7 @@ public class Controller {
 			int proteins = foodList.get(i).getProteins();
 			String comment = foodList.get(i).getComments();
 			window.createSearchResultRow(name, typeID, date, time, weight, cal, fat, carbs, proteins, comment);
+			
 		}
 	}
 
