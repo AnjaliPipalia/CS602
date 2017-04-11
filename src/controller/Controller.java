@@ -68,15 +68,15 @@ public class Controller {
 	}
 
 	private void defineResetAction() {
-		window.defineResetAction(new Listener(){
+		window.defineResetAction(new Listener() {
 
 			@Override
 			public void handleEvent(Event arg0) {
 				setFoodEditDetails();
 			}
-			
+
 		});
-		
+
 	}
 
 	private void defineUpdateAction() {
@@ -97,7 +97,7 @@ public class Controller {
 					String comments = window.getNewComments();
 					FoodIntakeType foodIntakeType = FoodIntakeType.valueOf(window.getFoodIntakeType().toUpperCase());
 					window.enteredEditMode();
-					
+
 					editFood.setName(fdName);
 					editFood.setDate(date);
 					editFood.setCalories(calories);
@@ -190,9 +190,9 @@ public class Controller {
 				setFoodEditDetails();
 			}
 
-			
 		});
 	}
+
 	private void setFoodEditDetails() {
 		window.setNewFoodName(editFood.getName());
 		window.setNewDate(editFood.getDate());
@@ -205,6 +205,7 @@ public class Controller {
 		window.setNewTime(editFood.getTime());
 		window.setNewMealType(editFood.getIntakeType());
 	}
+
 	private void defineSearchAction() {
 		window.defineSearchAction(new Listener() {
 
@@ -217,9 +218,9 @@ public class Controller {
 					fromDate = window.getSearchFromDate();
 					toDate = window.getSearchToDate();
 					showSearchLists();
-					
+
 				} catch (MandatoryFieldMissingException e) {
-					JOptionPane.showMessageDialog(null,e.getMessage());
+					JOptionPane.showMessageDialog(null, e.getMessage());
 					e.printStackTrace();
 				}
 
@@ -233,9 +234,8 @@ public class Controller {
 		window.clearTable();
 		index = -1;
 		foodList = database.read(searchName, fromDate, toDate);
-		if(foodList.isEmpty())
-		{
-			JOptionPane.showMessageDialog(null,"No search results to display.");
+		if (foodList.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "No search results to display.");
 		}
 		for (int i = 0; i < foodList.size(); i++) {
 			String name = foodList.get(i).getName();
@@ -249,7 +249,7 @@ public class Controller {
 			int proteins = foodList.get(i).getProteins();
 			String comment = foodList.get(i).getComments();
 			window.createSearchResultRow(name, typeID, date, time, weight, cal, fat, carbs, proteins, comment);
-			
+
 		}
 	}
 
@@ -343,9 +343,9 @@ public class Controller {
 					foodIntake.setComments(comments);
 					foodIntake.setTime(time);
 					foodIntake.setIntakeType(foodIntakeType);
-					database.create(foodIntake);
-
-					if (showMessageDialog()) {
+					
+					if (database.create(foodIntake)) {
+						JOptionPane.showMessageDialog(null, "Saved Successfully!");
 						window.setNewFoodName(" ");
 						window.setToCurrDate();
 						window.setNewCalories("0");
@@ -371,11 +371,6 @@ public class Controller {
 			}
 		});
 
-	}
-
-	protected boolean showMessageDialog() {
-		JOptionPane.showMessageDialog(null, "Saved Successfully!");
-		return true;
 	}
 
 }

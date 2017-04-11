@@ -53,8 +53,8 @@ public class DashBoard {
 	private Combo combo;
 	private Button btnSearch;
 	private Text txtFoodName;
-	private DateTime FromDateTime;
-	private DateTime ToDateTime;
+	private DateTime fromDateTime;
+	private DateTime toDateTime;
 	private Table table;
 	private Button btnEdit;
 	private Button btnDelete;
@@ -277,8 +277,8 @@ public class DashBoard {
 		lblFromDateLabel.setBounds(634, 31, 70, 29);
 		lblFromDateLabel.setText("From Date");
 
-		FromDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
-		FromDateTime.setBounds(710, 31, 102, 28);
+		fromDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
+		fromDateTime.setBounds(710, 31, 102, 28);
 
 		Label lblToDateLabel = new Label(grpSearch, SWT.CENTER);
 		lblToDateLabel.setBounds(new Rectangle(0, 0, 100, 0));
@@ -286,8 +286,8 @@ public class DashBoard {
 		lblToDateLabel.setBounds(818, 31, 52, 29);
 		lblToDateLabel.setText("To Date");
 
-		ToDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
-		ToDateTime.setBounds(876, 31, 102, 28);
+		toDateTime = new DateTime(grpSearch, SWT.DROP_DOWN);
+		toDateTime.setBounds(876, 31, 102, 28);
 
 		btnSearch = new Button(grpSearch, SWT.NONE);
 		btnSearch.setBounds(984, 31, 183, 29);
@@ -460,9 +460,9 @@ public class DashBoard {
 
 	public Date getSearchFromDate() throws MandatoryFieldMissingException {
 		Calendar instance = Calendar.getInstance();
-		instance.set(Calendar.DAY_OF_MONTH, FromDateTime.getDay());
-		instance.set(Calendar.MONTH, FromDateTime.getMonth());
-		instance.set(Calendar.YEAR, FromDateTime.getYear());
+		instance.set(Calendar.DAY_OF_MONTH, fromDateTime.getDay());
+		instance.set(Calendar.MONTH, fromDateTime.getMonth());
+		instance.set(Calendar.YEAR, fromDateTime.getYear());
 		Date d = new Date(instance.getTime().getTime());
 		if (Utils.getTodaysDate().compareTo(d) < 0) {
 			throw new MandatoryFieldMissingException("Invalid date");
@@ -472,9 +472,9 @@ public class DashBoard {
 
 	public Date getSearchToDate() throws MandatoryFieldMissingException {
 		Calendar instance = Calendar.getInstance();
-		instance.set(Calendar.DAY_OF_MONTH, ToDateTime.getDay());
-		instance.set(Calendar.MONTH, ToDateTime.getMonth());
-		instance.set(Calendar.YEAR, ToDateTime.getYear());
+		instance.set(Calendar.DAY_OF_MONTH, toDateTime.getDay());
+		instance.set(Calendar.MONTH, toDateTime.getMonth());
+		instance.set(Calendar.YEAR, toDateTime.getYear());
 		Date d = new Date(instance.getTime().getTime());
 		return d;
 	}

@@ -20,6 +20,8 @@ import javax.swing.JOptionPane;
 import controller.Controller;
 import database.Database;
 import database.DatabaseFactory;
+import exception.DatabaseException;
+import exception.MandatoryFieldMissingException;
 import food.FoodIntake;
 import view.DashBoard;
 
@@ -45,15 +47,16 @@ public class NutrientsTrackerApp {
 
 				// load a properties file
 				prop.load(input);
-				
 				Configuration.setProperties(prop);
 				Database database = DatabaseFactory.getDatabase();
+				database.createTables();
 				DashBoard window = new DashBoard();
 				Controller controller = new Controller(database, window);
 				controller.initialize();
 				window.open();
 			}
-
+		}catch(DatabaseException e){
+			JOptionPane.showMessageDialog(null,e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

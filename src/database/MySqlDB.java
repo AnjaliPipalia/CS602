@@ -15,6 +15,7 @@ import java.util.Calendar;
 
 import java.util.List;
 
+import exception.DatabaseException;
 import food.FoodIntake;
 import food.FoodIntakeType;
 import main.Configuration;
@@ -54,32 +55,6 @@ public class MySqlDB implements Database {
 			preparedStmt.setInt(8, foodIntake.getProteins());
 			preparedStmt.setString(9, foodIntake.getComments());
 			preparedStmt.setInt(10, foodIntake.getIntakeType().ordinal());
-			preparedStmt.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		return close();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see database.Database#create(food.FoodIntakeType)
-	 */
-	@Override
-	public boolean create(FoodIntakeType foodIntakeType) {
-		open();
-		// the mysql insert statement
-		String query = " insert into FoodIntakeType (IntakeType)" + " values (?)";
-
-		// create the mysql insert preparedstatement
-		PreparedStatement preparedStmt;
-		try {
-			// TODO
-			preparedStmt = connection.prepareStatement(query);
-			preparedStmt.setString(1, "LUNCH");
 			preparedStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -139,7 +114,7 @@ public class MySqlDB implements Database {
 	private String getSearchQuery(String foodName, Date from, Date to) {
 		String query = "select * from FoodIntake where ";
 		if (foodName != null && !foodName.trim().equals("")) {
-			query += "Name like '%"+ foodName + "%'";
+			query += "Name like '%" + foodName + "%'";
 		}
 		if ((foodName != null && !foodName.trim().equals("")) && (from != null || to != null)) {
 			query += " AND ";
@@ -165,9 +140,10 @@ public class MySqlDB implements Database {
 		open();
 		try {
 			// create our java preparedstatement using a sql update query
-			PreparedStatement preparedStmt = connection.prepareStatement("UPDATE FoodIntake SET Name = ?,Date = ?,Time=?,Weight=?,"
-					+ "Calories=?,Fat=?,Carbohydrates=?,Proteins=?,"
-					+ "Comments=?,IntakeTypeID=? WHERE IntakeID = ?; ");
+			PreparedStatement preparedStmt = connection
+					.prepareStatement("UPDATE FoodIntake SET Name = ?,Date = ?,Time=?,Weight=?,"
+							+ "Calories=?,Fat=?,Carbohydrates=?,Proteins=?,"
+							+ "Comments=?,IntakeTypeID=? WHERE IntakeID = ?; ");
 
 			preparedStmt.setString(1, foodIntake.getName());
 			preparedStmt.setDate(2, foodIntake.getDate());
@@ -232,8 +208,11 @@ public class MySqlDB implements Database {
 		}
 
 		try {
-			//connection = DriverManager.getConnection("jdbc:mysql://sql2.njit.edu/arp226", "arp226", "5WucrXW9e");
-			connection = DriverManager.getConnection(Configuration.getDBUrl(),Configuration.getDBUserName(),Configuration.getDBPassword());
+			// connection =
+			// DriverManager.getConnection("jdbc:mysql://sql2.njit.edu/arp226",
+			// "arp226", "5WucrXW9e");
+			connection = DriverManager.getConnection(Configuration.getDBUrl(), Configuration.getDBUserName(),
+					Configuration.getDBPassword());
 		} catch (SQLException e) {
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
@@ -256,6 +235,32 @@ public class MySqlDB implements Database {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void createTables() throws DatabaseException {
+		open();
+
+		try {
+			String sqlCreate2 = "Create table IF NOT EXISTS FoodIntakeType(IntakeTypeID INT AUTO_INCREMENT PRIMARY KEY NOT NULL , Name VARCHAR(20) NOT NULL)";
+			String sqlInsert2 = "INSERT INTO FoodIntakeType (Name) VAlUES ('Breakfast'),('Lunch'),('Dinner'),('Snacks'),('PartyMeal'),('Meal'),('Others')";
+					
+			String sqlCreate = "Create table IF NOT EXISTS FoodIntake (IntakeID INT AUTO_INCREMENT PRIMARY KEY NOT NULL ,"
+					+ " Name VARCHAR(20) NOT NULL, IntakeTypeID INT ,Date DATE, Time TIME, Calories INT,Carbohydrates "
+					+ "INT, Comments VARCHAR(100), Fat INT, Proteins INT, Weight INT,CONSTRAINT FK_FoodIntakeType FOREIGN KEY (IntakeTypeID) REFERENCES FoodIntakeType(IntakeTypeID) )";
+			
+			Statement stmt = connection.createStatement();
+			
+			stmt.executeUpdate(sqlCreate2);
+			stmt.execute(sqlInsert2);
+			stmt.executeUpdate(sqlCreate);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DatabaseException("Connection to database failed!");
+
+		}
+		close();
 	}
 
 }
