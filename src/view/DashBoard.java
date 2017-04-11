@@ -99,9 +99,9 @@ public class DashBoard {
 		shell = new Shell(display);
 		// Image image = new Image(display,
 		// "C:\\Users\\arp226\\Desktop\\DIET.jpg");
-		Image image = new Image(display, getClass().getClassLoader().getResource("resources/DIET.jpg").getPath());
+		//Image image = new Image(display, getClass().getClassLoader().getResource("resources/DIET.jpg").getPath());
 
-		shell.setImage(image);
+		//shell.setImage(image);
 		shell.setSize(1215, 739);
 		shell.setText("Diet Tracker");
 	}
