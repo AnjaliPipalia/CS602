@@ -1,3 +1,8 @@
+/**
+ * Class for Utility functions
+ * @author arp226
+ */
+
 package main;
 
 import java.sql.Date;
@@ -13,5 +18,6 @@ public class Utils {
 
 	public static Time getTodaysTime() {
 		Calendar instance = Calendar.getInstance();
-		return new Time(instance.getTime().getTime());	}
+		return new Time(instance.getTime().getTime());
+	}
 }

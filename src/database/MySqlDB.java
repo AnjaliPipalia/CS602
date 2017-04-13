@@ -16,8 +16,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
-
 import java.util.List;
 
 import exception.DatabaseException;
@@ -115,7 +113,7 @@ public class MySqlDB implements Database {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-
+			
 		}
 
 		close();
@@ -151,7 +149,7 @@ public class MySqlDB implements Database {
 	}
 
 	/**
-	 * Update values and store it in database
+	 * Updates database values for the FoodIntake object
 	 * 
 	 * @param foodIntake
 	 *            FoodIntake
@@ -184,6 +182,7 @@ public class MySqlDB implements Database {
 			preparedStmt.close();
 		} catch (SQLException se) {
 			se.printStackTrace();
+			close();
 			return false;
 		}
 
@@ -213,6 +212,7 @@ public class MySqlDB implements Database {
 
 		} catch (SQLException se) {
 			se.printStackTrace();
+			close();
 			return false;
 		}
 
@@ -221,7 +221,7 @@ public class MySqlDB implements Database {
 
 	/**
 	 *
-	 * Connects to the database
+	 * Open connection to the database
 	 * 
 	 * @return boolean
 	 * @see database.Database#open()
@@ -237,19 +237,19 @@ public class MySqlDB implements Database {
 		}
 
 		try {
-
 			connection = DriverManager.getConnection(Configuration.getDBUrl(), Configuration.getDBUserName(),
 					Configuration.getDBPassword());
 		} catch (SQLException e) {
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
+
 			return false;
 		}
 		return connection != null;
 	}
 
 	/**
-	 * close the database connection
+	 * Close the database connection
 	 * 
 	 * @return boolean
 	 * @see database.Database#close()
@@ -290,6 +290,7 @@ public class MySqlDB implements Database {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			close();
 			throw new DatabaseException("Connection to database failed!");
 
 		}

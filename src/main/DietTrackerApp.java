@@ -1,68 +1,53 @@
 /**
- * 
+ * The  Main Application - DietTracker_v1.0
+ * @author arp226
  */
 package main;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Properties;
-
 import javax.swing.JOptionPane;
 
 import controller.Controller;
 import database.Database;
 import database.DatabaseFactory;
 import exception.DatabaseException;
-import exception.MandatoryFieldMissingException;
-import food.FoodIntake;
 import view.DashBoard;
+import view.UI;
 
-/**
- * @author arp226
- *
- */
-public class NutrientsTrackerApp {
+public class DietTrackerApp {
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		try {
 			if (isRunning()) {
 				JOptionPane.showMessageDialog(null, "Already Running...");
 				System.exit(1);
 			} else {
-				Properties prop = new Properties();
-				InputStream input = null;
-				input = new FileInputStream("DietTracker.properties");
 
-				// load a properties file
-				prop.load(input);
-				Configuration.setProperties(prop);
+				Configuration.setProperties("DietTracker.properties");
 				Database database = DatabaseFactory.getDatabase();
 				database.createTables();
-				DashBoard window = new DashBoard();
+				UI window = new DashBoard();
 				Controller controller = new Controller(database, window);
 				controller.initialize();
 				window.open();
 			}
-		}catch(DatabaseException e){
-			JOptionPane.showMessageDialog(null,e.getMessage());
+		} catch (DatabaseException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
+	// Validating single instance of the application
 	private static FileLock lock;
 	private static FileChannel channel;
 	private static File file;

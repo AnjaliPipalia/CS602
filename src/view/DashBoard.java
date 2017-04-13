@@ -1,23 +1,18 @@
 /**
- * 
+ * Swing based User Interface
+ * @author arp226
  */
 package view;
 
-import java.awt.Window;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Calendar;
 
-import javax.swing.JFrame;
-
-//import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.VerifyListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -33,10 +28,6 @@ import exception.MandatoryFieldMissingException;
 import food.FoodIntakeType;
 import main.Utils;
 
-/**
- * @author arp226
- *
- */
 public class DashBoard implements UI {
 	protected Shell shell;
 	Display display;
@@ -62,7 +53,6 @@ public class DashBoard implements UI {
 	private Button btnReset;
 	private Button btnNew;
 
-	// protected Shell shlDietTracker;
 	public DashBoard() {
 		display = Display.getDefault();
 		createContents();
@@ -72,8 +62,6 @@ public class DashBoard implements UI {
 	 * Open the window.
 	 */
 	public void open() {
-		// display = Display.getDefault();
-		// createContents();
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -97,11 +85,6 @@ public class DashBoard implements UI {
 
 	private void initializeShell() {
 		shell = new Shell(display);
-		// Image image = new Image(display,
-		// "C:\\Users\\arp226\\Desktop\\DIET.jpg");
-		//Image image = new Image(display, getClass().getClassLoader().getResource("resources/DIET.jpg").getPath());
-
-		//shell.setImage(image);
 		shell.setSize(1215, 739);
 		shell.setText("Diet Tracker");
 	}

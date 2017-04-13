@@ -11,7 +11,6 @@ import java.util.List;
 
 import exception.DatabaseException;
 import food.FoodIntake;
-import food.FoodIntakeType;
 
 public interface Database {
 	 public boolean save(FoodIntake foodIntake);
