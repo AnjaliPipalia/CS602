@@ -37,7 +37,7 @@ import main.Utils;
  * @author arp226
  *
  */
-public class DashBoard {
+public class DashBoard implements UI {
 	protected Shell shell;
 	Display display;
 	private Button btnSave;
@@ -146,10 +146,10 @@ public class DashBoard {
 		tTime = new DateTime(grpDietDetails, SWT.TIME);
 		tTime.setBounds(311, 61, 107, 28);
 
-		Label lblWeightkg = new Label(grpDietDetails, SWT.NONE);
-		lblWeightkg.setBounds(new Rectangle(0, 0, 100, 0));
-		lblWeightkg.setText("Weight (kg)");
-		lblWeightkg.setBounds(15, 96, 77, 20);
+		Label lblWeight = new Label(grpDietDetails, SWT.NONE);
+		lblWeight.setBounds(new Rectangle(0, 0, 100, 0));
+		lblWeight.setText("Weight (g)");
+		lblWeight.setBounds(15, 96, 77, 20);
 
 		tWeight = new Text(grpDietDetails, SWT.BORDER);
 		tWeight.setBounds(98, 93, 107, 26);
@@ -244,7 +244,7 @@ public class DashBoard {
 		addColumn(table, "Fat (g)");
 		addColumn(table, "Carbohydrates");
 		addColumn(table, "Proteins (g)");
-		addColumn(table, "Comments", 125);
+		addColumn(table, "Comments", 180);
 	}
 
 	private void addColumn(Table table, String header, int i) {
@@ -314,6 +314,9 @@ public class DashBoard {
 		instance.set(Calendar.DAY_OF_MONTH, tDate.getDay());
 		instance.set(Calendar.MONTH, tDate.getMonth());
 		instance.set(Calendar.YEAR, tDate.getYear());
+		instance.set(Calendar.HOUR_OF_DAY, tTime.getHours());
+		instance.set(Calendar.MINUTE, tTime.getMinutes());
+		instance.set(Calendar.SECOND, tTime.getSeconds());
 		Date d = new Date(instance.getTime().getTime());
 		if (Utils.getTodaysDate().compareTo(d) < 0) {
 			throw new MandatoryFieldMissingException("Invalid date");
@@ -420,6 +423,9 @@ public class DashBoard {
 
 	public Time getNewTime() throws MandatoryFieldMissingException {
 		Calendar instance = Calendar.getInstance();
+		instance.set(Calendar.DAY_OF_MONTH, tDate.getDay());
+		instance.set(Calendar.MONTH, tDate.getMonth());
+		instance.set(Calendar.YEAR, tDate.getYear());
 		instance.set(Calendar.HOUR_OF_DAY, tTime.getHours());
 		instance.set(Calendar.MINUTE, tTime.getMinutes());
 		instance.set(Calendar.SECOND, tTime.getSeconds());
