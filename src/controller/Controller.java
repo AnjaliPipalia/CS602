@@ -1,13 +1,13 @@
 /**
+ * The Controller acts as an bridge between UI and Database
  * 
+ * @author arp226
  */
 package controller;
 
-import java.awt.Window;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -16,23 +16,17 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Table;
 
 import database.Database;
 import exception.MandatoryFieldMissingException;
 import food.FoodIntake;
 import food.FoodIntakeType;
-import view.DashBoard;
-
-/**
- * @author arp226
- *
- */
+import view.UI;
 
 public class Controller {
 
 	private Database database;
-	private DashBoard window;
+	private UI window;
 	boolean inEditMode = false;
 	private int index = -1;
 	List<FoodIntake> foodList = new ArrayList<>();
@@ -41,12 +35,15 @@ public class Controller {
 	protected Date toDate;
 	protected FoodIntake editFood;
 
-	public Controller(Database database, DashBoard window) {
+	public Controller(Database database, UI window) {
 		this.database = database;
 		this.window = window;
 
 	}
 
+	/**
+	 * It initializes the behavior of UI
+	 */
 	public void initialize() {
 		window.enteredNewMode();
 		defineSearchAction();
@@ -67,25 +64,31 @@ public class Controller {
 
 	}
 
+	/**
+	 * On click event for button Reset
+	 */
 	private void defineResetAction() {
 		window.defineResetAction(new Listener() {
 
 			@Override
 			public void handleEvent(Event arg0) {
-				setFoodEditDetails();
+				setToEditFoodDetails();
 			}
 
 		});
 
 	}
 
+	/**
+	 * On click event for button Update
+	 */
 	private void defineUpdateAction() {
 		window.defineUpdateAction(new Listener() {
 
 			@Override
 			public void handleEvent(Event arg0) {
 				try {
-
+					// get values from UI
 					String fdName = window.getNewFoodName();
 					Date date = window.getNewFoodDate();
 					Time time = window.getNewTime();
@@ -96,8 +99,10 @@ public class Controller {
 					int proteins = window.getNewProteins();
 					String comments = window.getNewComments();
 					FoodIntakeType foodIntakeType = FoodIntakeType.valueOf(window.getFoodIntakeType().toUpperCase());
+
 					window.enteredEditMode();
 
+					// Stores all the values in FoodIntake object
 					editFood.setName(fdName);
 					editFood.setDate(date);
 					editFood.setCalories(calories);
@@ -108,6 +113,7 @@ public class Controller {
 					editFood.setComments(comments);
 					editFood.setTime(time);
 					editFood.setIntakeType(foodIntakeType);
+					// updates the database
 					if (database.update(editFood)) {
 
 						JOptionPane.showMessageDialog(null, "Updated successfully!");
@@ -127,13 +133,18 @@ public class Controller {
 
 	}
 
+	/**
+	 * On click event for button New
+	 */
 	private void defineNewAction() {
 		window.defineNewAction(new Listener() {
 
 			@Override
 			public void handleEvent(Event arg0) {
+
 				window.enteredNewMode();
 				index = -1;
+				// makes all the fields blank
 				window.setNewFoodName(" ");
 				window.setToCurrDate();
 				window.setNewCalories("0");
@@ -151,6 +162,9 @@ public class Controller {
 
 	}
 
+	/**
+	 * On click event for button Delete
+	 */
 	private void defineDeleteAction() {
 		window.defineDeleteAction(new Listener() {
 
@@ -162,6 +176,7 @@ public class Controller {
 					return;
 				}
 				FoodIntake foodIntake = foodList.get(index);
+				// delete the FoodIntake object
 				if (database.delete(foodIntake)) {
 					JOptionPane.showMessageDialog(null, "Deleted Successfully");
 					foodList.remove(index);
@@ -175,6 +190,9 @@ public class Controller {
 		});
 	}
 
+	/**
+	 * On click event for button Edit
+	 */
 	private void defineEditAction() {
 		window.defineEditAction(new Listener() {
 
@@ -187,13 +205,16 @@ public class Controller {
 				}
 				window.enteredEditMode();
 				editFood = foodList.get(index);
-				setFoodEditDetails();
+				setToEditFoodDetails();
 			}
 
 		});
 	}
 
-	private void setFoodEditDetails() {
+	/**
+	 * sets all diet details values with editfood FoodIntake object
+	 */
+	private void setToEditFoodDetails() {
 		window.setNewFoodName(editFood.getName());
 		window.setNewDate(editFood.getDate());
 		window.setNewCalories(editFood.getCalories() + "");
@@ -206,6 +227,9 @@ public class Controller {
 		window.setNewMealType(editFood.getIntakeType());
 	}
 
+	/**
+	 * On click event for button Search
+	 */
 	private void defineSearchAction() {
 		window.defineSearchAction(new Listener() {
 
@@ -213,7 +237,7 @@ public class Controller {
 			public void handleEvent(Event event) {
 
 				try {
-
+					// search by foodName,fromDate,toDate
 					searchName = window.getSearchFoodName();
 					fromDate = window.getSearchFromDate();
 					toDate = window.getSearchToDate();
@@ -230,6 +254,9 @@ public class Controller {
 
 	}
 
+	/**
+	 * fetches all the required data from Database
+	 */
 	private void showSearchLists() {
 		window.clearTable();
 		index = -1;
@@ -238,25 +265,35 @@ public class Controller {
 			JOptionPane.showMessageDialog(null, "No search results to display.");
 		}
 		for (int i = 0; i < foodList.size(); i++) {
-			String name = foodList.get(i).getName();
-			String typeID = foodList.get(i).getIntakeType().mealName();
-			Date date = foodList.get(i).getDate();
-			Time time = foodList.get(i).getTime();
-			int weight = foodList.get(i).getWeight();
-			int cal = foodList.get(i).getCalories();
-			int fat = foodList.get(i).getFat();
-			int carbs = foodList.get(i).getCarbohydrates();
-			int proteins = foodList.get(i).getProteins();
-			String comment = foodList.get(i).getComments();
+			FoodIntake temp = foodList.get(i);
+			String name = temp.getName();
+			String typeID = temp.getIntakeType().mealName();
+			Date date = temp.getDate();
+			Time time = temp.getTime();
+			int weight = temp.getWeight();
+			int cal = temp.getCalories();
+			int fat = temp.getFat();
+			int carbs = temp.getCarbohydrates();
+			int proteins = temp.getProteins();
+			String comment = temp.getComments();
 			window.createSearchResultRow(name, typeID, date, time, weight, cal, fat, carbs, proteins, comment);
 
 		}
 	}
 
+	/**
+	 * Add validation for foodName
+	 */
 	private void addFoodNameValidation() {
 		window.addFoodNameValidation(ensureCharsOnly());
 	}
 
+	/**
+	 * Creates VerifyListener for characters,delete,backspace,space,comma and
+	 * hyphen
+	 * 
+	 * @return VerifyListener
+	 */
 	private VerifyListener ensureCharsOnly() {
 		return new VerifyListener() {
 
@@ -276,26 +313,46 @@ public class Controller {
 		};
 	}
 
+	/**
+	 * Add validation for weight
+	 */
 	private void addWeightValidation() {
 		window.addWeightValidation(ensureDigitsOnly());
 	}
 
+	/**
+	 * Add validation for Proteins
+	 */
 	private void addProteinsValidation() {
 		window.addProteinsValidation(ensureDigitsOnly());
 	}
 
+	/**
+	 * Add validation for calories
+	 */
 	private void addCaloriesValidation() {
 		window.addCaloriesValidation(ensureDigitsOnly());
 	}
 
+	/**
+	 * Add validation for fat
+	 */
 	private void addFatValidation() {
 		window.addFatValidation(ensureDigitsOnly());
 	}
 
+	/**
+	 * Add validation for carbohydrates
+	 */
 	private void addCarbsValidation() {
 		window.addCarbsValidation(ensureDigitsOnly());
 	}
 
+	/**
+	 * Creates VerifyListener for digits,delete,backspace
+	 * 
+	 * @return VerifyListener
+	 */
 	private VerifyListener ensureDigitsOnly() {
 		return new VerifyListener() {
 
@@ -314,6 +371,9 @@ public class Controller {
 		};
 	}
 
+	/**
+	 * On click event for button Save
+	 */
 	private void defineSaveAction() {
 		window.defineSaveAction(new Listener() {
 
@@ -321,6 +381,7 @@ public class Controller {
 			public void handleEvent(Event event) {
 				try {
 					index = -1;
+					// gets all the values from UI
 					String fdName = window.getNewFoodName();
 					Date date = window.getNewFoodDate();
 					Time time = window.getNewTime();
@@ -332,6 +393,7 @@ public class Controller {
 					String comments = window.getNewComments();
 					FoodIntakeType foodIntakeType = FoodIntakeType.valueOf(window.getFoodIntakeType().toUpperCase());
 
+					// Stores all the values in FoodIntake object
 					FoodIntake foodIntake = new FoodIntake();
 					foodIntake.setName(fdName);
 					foodIntake.setDate(date);
@@ -343,8 +405,8 @@ public class Controller {
 					foodIntake.setComments(comments);
 					foodIntake.setTime(time);
 					foodIntake.setIntakeType(foodIntakeType);
-					
-					if (database.create(foodIntake)) {
+					// makes all the fields blank on saving successfully
+					if (database.save(foodIntake)) {
 						JOptionPane.showMessageDialog(null, "Saved Successfully!");
 						window.setNewFoodName(" ");
 						window.setToCurrDate();

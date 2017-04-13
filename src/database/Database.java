@@ -1,5 +1,7 @@
 /**
+ * The interface for Database objects
  * 
+ * @author arp226
  */
 package database;
 
@@ -11,13 +13,8 @@ import exception.DatabaseException;
 import food.FoodIntake;
 import food.FoodIntakeType;
 
-/**
- * @author arp226
- *
- */
 public interface Database {
-	 public boolean create(FoodIntake foodIntake);
-	//public boolean create(FoodIntakeType foodIntakeType);
+	 public boolean save(FoodIntake foodIntake);
 	 public List<FoodIntake> read(String foodName, Date from, Date to);
 	 public boolean update(FoodIntake foodIntake);
 	 public boolean delete(FoodIntake foodIntake);
