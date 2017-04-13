@@ -1,23 +1,21 @@
+/**
+ * FoodIntakeType Enums
+ * @author arp226
+ */
+
 package food;
 
-public enum  FoodIntakeType {
-	DUMMY(""),
-	BREAKFAST("Breakfast"),
-	LUNCH("Lunch"),
-    DINNER("Dinner"),
-    SNACKS("Snacks"),
-    PARTYMEAL("PartyMeal"),
-    MEAL("Meal"),
-    OTHERS("Others"),
-    ;
+public enum FoodIntakeType {
+	DUMMY(""), BREAKFAST("Breakfast"), LUNCH("Lunch"), DINNER("Dinner"), SNACKS("Snacks"), PARTYMEAL("PartyMeal"), MEAL(
+			"Meal"), OTHERS("Others"),;
 
-    private String mealNames;
+	private String mealNames;
 
-    FoodIntakeType(String mealNames) {
-        this.mealNames = mealNames;
-    }
+	FoodIntakeType(String mealNames) {
+		this.mealNames = mealNames;
+	}
 
-    public String mealName() {
-        return mealNames;
-    }
+	public String mealName() {
+		return mealNames;
+	}
 }

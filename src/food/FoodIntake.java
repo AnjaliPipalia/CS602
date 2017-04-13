@@ -1,5 +1,6 @@
 /**
- * 
+ * FoodIntake data class
+ * @author arp226
  */
 package food;
 
@@ -9,10 +10,6 @@ import java.util.Calendar;
 
 import main.Utils;
 
-/**
- * @author arp226
- *
- */
 public class FoodIntake {
 	int intakeID, weight, calories, fat, carbohydrates, proteins;
 	String name, comments;
@@ -67,7 +64,8 @@ public class FoodIntake {
 	}
 
 	/**
-	 * @param foodIntakeType the intakeType to set
+	 * @param foodIntakeType
+	 *            the intakeType to set
 	 */
 	public void setIntakeType(FoodIntakeType foodIntakeType) {
 		this.intakeType = foodIntakeType;
@@ -203,7 +201,6 @@ public class FoodIntake {
 	}
 
 	/**
-	 * TODO - Verify SetTIME
 	 * 
 	 * @param time2
 	 *            the time to set
