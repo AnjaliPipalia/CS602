@@ -1,5 +1,10 @@
 /**
+ * The MySqlDB program implements Database.java that simply 
+ * runs query for create tables/Add/Update/Delete and also Open 
+ * and Close database connection
  * 
+ * @author arp226
+ * @version 1.0
  */
 package database;
 
@@ -20,22 +25,20 @@ import food.FoodIntake;
 import food.FoodIntakeType;
 import main.Configuration;
 
-/**
- * @author arp226
- *
- */
 public class MySqlDB implements Database {
 
 	Connection connection = null;
 
 	/*
-	 * (non-Javadoc)
+	 * Insert details into table FoodIntake
 	 * 
+	 * @param foodIntake FoodIntake object being inserted into database
+	 * @returns boolean success value of the method
 	 * @see database.Database#create(food.FoodIntake)
 	 */
 
 	@Override
-	public boolean create(FoodIntake foodIntake) {
+	public boolean save(FoodIntake foodIntake) {
 		open();
 		// the mysql insert statement
 		String query = " insert into FoodIntake (Name, Date,Time,Weight,Calories,Fat,Carbohydrates,Proteins,Comments,IntakeTypeID)"
@@ -58,15 +61,17 @@ public class MySqlDB implements Database {
 			preparedStmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			close();
 			return false;
+		
 		}
 
 		return close();
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
+	 *This method will read details from table FoodIntake
+	 * by getting the values from_____________________
 	 * @see database.Database#read(java.lang.String, java.util.Date,
 	 * java.util.Date)
 	 */
@@ -208,9 +213,7 @@ public class MySqlDB implements Database {
 		}
 
 		try {
-			// connection =
-			// DriverManager.getConnection("jdbc:mysql://sql2.njit.edu/arp226",
-			// "arp226", "5WucrXW9e");
+		
 			connection = DriverManager.getConnection(Configuration.getDBUrl(), Configuration.getDBUserName(),
 					Configuration.getDBPassword());
 		} catch (SQLException e) {
@@ -243,7 +246,7 @@ public class MySqlDB implements Database {
 
 		try {
 			String sqlCreate2 = "Create table IF NOT EXISTS FoodIntakeType(IntakeTypeID INT AUTO_INCREMENT PRIMARY KEY NOT NULL , Name VARCHAR(20) NOT NULL)";
-			String sqlInsert2 = "INSERT INTO FoodIntakeType (Name) VAlUES ('Breakfast'),('Lunch'),('Dinner'),('Snacks'),('PartyMeal'),('Meal'),('Others')";
+			String sqlInsert2 = "INSERT IGNORE INTO FoodIntakeType (IntakeTypeID,Name) VAlUES ('1','Breakfast'),('2','Lunch'),('3','Dinner'),('4','Snacks'),('5','PartyMeal'),('6','Meal'),('7','Others')";
 					
 			String sqlCreate = "Create table IF NOT EXISTS FoodIntake (IntakeID INT AUTO_INCREMENT PRIMARY KEY NOT NULL ,"
 					+ " Name VARCHAR(20) NOT NULL, IntakeTypeID INT ,Date DATE, Time TIME, Calories INT,Carbohydrates "
