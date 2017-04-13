@@ -29,11 +29,14 @@ public class MySqlDB implements Database {
 
 	Connection connection = null;
 
-	/*
+	/**
 	 * Insert details into table FoodIntake
 	 * 
-	 * @param foodIntake FoodIntake object being inserted into database
+	 * @param foodIntake
+	 *            FoodIntake object being inserted into database
+	 * 
 	 * @returns boolean success value of the method
+	 * 
 	 * @see database.Database#create(food.FoodIntake)
 	 */
 
@@ -63,17 +66,21 @@ public class MySqlDB implements Database {
 			e.printStackTrace();
 			close();
 			return false;
-		
+
 		}
 
 		return close();
 	}
 
-	/*
-	 *This method will read details from table FoodIntake
-	 * by getting the values from_____________________
+	/**
+	 *
+	 * Reads details from table FoodIntake
+	 * 
+	 * @param foodName,from
+	 *            and to
+	 * @return List of type FoodIntake
 	 * @see database.Database#read(java.lang.String, java.util.Date,
-	 * java.util.Date)
+	 *      java.util.Date)
 	 */
 	@Override
 	public List<FoodIntake> read(String foodName, Date from, Date to) {
@@ -116,6 +123,14 @@ public class MySqlDB implements Database {
 
 	}
 
+	/**
+	 * Search query based on foodName,fromDate and toDate
+	 * 
+	 * @param foodName
+	 * @param from
+	 * @param to
+	 * @return String
+	 */
 	private String getSearchQuery(String foodName, Date from, Date to) {
 		String query = "select * from FoodIntake where ";
 		if (foodName != null && !foodName.trim().equals("")) {
@@ -135,16 +150,19 @@ public class MySqlDB implements Database {
 		return query;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Update values and store it in database
 	 * 
+	 * @param foodIntake
+	 *            FoodIntake
+	 * @return boolean
 	 * @see database.Database#update(food.FoodIntake)
 	 */
 	@Override
 	public boolean update(FoodIntake foodIntake) {
 		open();
 		try {
-			// create our java preparedstatement using a sql update query
+			// using a sql update query
 			PreparedStatement preparedStmt = connection
 					.prepareStatement("UPDATE FoodIntake SET Name = ?,Date = ?,Time=?,Weight=?,"
 							+ "Calories=?,Fat=?,Carbohydrates=?,Proteins=?,"
@@ -172,8 +190,12 @@ public class MySqlDB implements Database {
 		return close();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Delete values from the database
+	 * 
+	 * @param foodIntake
+	 *            FoodIntake
+	 * @return boolean
 	 * 
 	 * @see database.Database#delete(food.FoodIntake)
 	 */
@@ -197,9 +219,11 @@ public class MySqlDB implements Database {
 		return close();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 *
+	 * Connects to the database
 	 * 
+	 * @return boolean
 	 * @see database.Database#open()
 	 */
 	@Override
@@ -213,7 +237,7 @@ public class MySqlDB implements Database {
 		}
 
 		try {
-		
+
 			connection = DriverManager.getConnection(Configuration.getDBUrl(), Configuration.getDBUserName(),
 					Configuration.getDBPassword());
 		} catch (SQLException e) {
@@ -224,9 +248,10 @@ public class MySqlDB implements Database {
 		return connection != null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * close the database connection
 	 * 
+	 * @return boolean
 	 * @see database.Database#close()
 	 */
 	@Override
@@ -240,24 +265,29 @@ public class MySqlDB implements Database {
 		return true;
 	}
 
+	/**
+	 * Create tables FoodIntake and FoodIntakeType Insert values into table
+	 * FoodIntakeType
+	 */
 	@Override
 	public void createTables() throws DatabaseException {
 		open();
 
 		try {
+			// Query for table FoodIntakeType
 			String sqlCreate2 = "Create table IF NOT EXISTS FoodIntakeType(IntakeTypeID INT AUTO_INCREMENT PRIMARY KEY NOT NULL , Name VARCHAR(20) NOT NULL)";
 			String sqlInsert2 = "INSERT IGNORE INTO FoodIntakeType (IntakeTypeID,Name) VAlUES ('1','Breakfast'),('2','Lunch'),('3','Dinner'),('4','Snacks'),('5','PartyMeal'),('6','Meal'),('7','Others')";
-					
+			// Query for table FoodIntake
 			String sqlCreate = "Create table IF NOT EXISTS FoodIntake (IntakeID INT AUTO_INCREMENT PRIMARY KEY NOT NULL ,"
 					+ " Name VARCHAR(20) NOT NULL, IntakeTypeID INT ,Date DATE, Time TIME, Calories INT,Carbohydrates "
 					+ "INT, Comments VARCHAR(100), Fat INT, Proteins INT, Weight INT,CONSTRAINT FK_FoodIntakeType FOREIGN KEY (IntakeTypeID) REFERENCES FoodIntakeType(IntakeTypeID) )";
-			
+
 			Statement stmt = connection.createStatement();
-			
+
 			stmt.executeUpdate(sqlCreate2);
 			stmt.execute(sqlInsert2);
 			stmt.executeUpdate(sqlCreate);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DatabaseException("Connection to database failed!");
